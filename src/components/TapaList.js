@@ -16,11 +16,12 @@ const TapaList = () => {
   }, []);
 
   return (
-    <div>
-      {tapas.map(tapa => (
+    <div className="tapa-list">
+      {tapas.map((tapa) => (
         <TapaCard key={tapa.id} tapa={tapa} />
       ))}
     </div>
+
   );
 };
 

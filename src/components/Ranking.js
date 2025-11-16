@@ -32,16 +32,16 @@ const Ranking = () => {
   }, []);
 
   return (
-    <div>
-      <h2>🏆 Ranking de tapas</h2>
+    <div className="ranking-container">
       {ranking.map((tapa, index) => (
-        <div key={tapa.id} style={{ border: "1px solid #ccc", padding: 10, margin: 10 }}>
-          <h3>{index + 1}. {tapa.nombre} ({tapa.votos} votos)</h3>
-          <p>{tapa.descripcion}</p>
-          {tapa.fotoURL && <img src={tapa.fotoURL} alt={tapa.nombre} width={150} />}
+        <div key={tapa.id} className="ranking-item">
+          <span>{index + 1}. {tapa.nombre}</span>
+          <img src={tapa.fotoURL} alt={tapa.nombre} />
+          <span>{tapa.votos} votos</span>
         </div>
       ))}
     </div>
+
   );
 };
 

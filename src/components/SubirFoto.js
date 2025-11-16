@@ -63,7 +63,8 @@ const SubirFoto = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="subir-form" onSubmit={handleSubmit}>
+      <h2>Inscripción de Tapa</h2>
       <input
         type="text"
         placeholder="Nombre de la tapa"
@@ -71,8 +72,7 @@ const SubirFoto = () => {
         onChange={(e) => setNombre(e.target.value)}
         required
       />
-      <input
-        type="text"
+      <textarea
         placeholder="Descripción o ingredientes"
         value={descripcion}
         onChange={(e) => setDescripcion(e.target.value)}
@@ -87,6 +87,7 @@ const SubirFoto = () => {
         {loading ? "Subiendo..." : "Subir tapa"}
       </button>
     </form>
+
   );
 };
 
