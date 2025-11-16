@@ -13,7 +13,7 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://AlbaErdociainHerrero97.github.io/app_concurso_tapas",
+  "homepage": "https://albaeh-apps.github.io/app_concurso_tapas",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
