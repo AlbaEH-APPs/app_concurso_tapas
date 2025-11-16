@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
-import IMGBB_API_KEY from "../config.js";
+import {IMGBB_API_KEY_original} from "../config.js";
 
-const IMGBB_API_KEY = IMGBB_API_KEY; // Pon aquí tu API key
+const IMGBB_API_KEY = IMGBB_API_KEY_original; // Pon aquí tu API key
 
 const SubirFoto = () => {
   const [nombre, setNombre] = useState("");
