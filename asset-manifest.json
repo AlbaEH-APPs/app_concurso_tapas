@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/concurso-tapas/static/css/main.28d2e6a6.css",
+    "main.js": "/concurso-tapas/static/js/main.3c170bd8.js",
+    "static/js/453.05bf1b2d.chunk.js": "/concurso-tapas/static/js/453.05bf1b2d.chunk.js",
+    "index.html": "/concurso-tapas/index.html",
+    "main.28d2e6a6.css.map": "/concurso-tapas/static/css/main.28d2e6a6.css.map",
+    "main.3c170bd8.js.map": "/concurso-tapas/static/js/main.3c170bd8.js.map",
+    "453.05bf1b2d.chunk.js.map": "/concurso-tapas/static/js/453.05bf1b2d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.28d2e6a6.css",
+    "static/js/main.3c170bd8.js"
+  ]
+}
