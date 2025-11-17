@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/app_concurso_tapas/static/css/main.28d2e6a6.css",
-    "main.js": "/app_concurso_tapas/static/js/main.c56ae95d.js",
+    "main.css": "/app_concurso_tapas/static/css/main.34148993.css",
+    "main.js": "/app_concurso_tapas/static/js/main.190dc89f.js",
     "static/js/453.05bf1b2d.chunk.js": "/app_concurso_tapas/static/js/453.05bf1b2d.chunk.js",
     "index.html": "/app_concurso_tapas/index.html",
-    "main.28d2e6a6.css.map": "/app_concurso_tapas/static/css/main.28d2e6a6.css.map",
-    "main.c56ae95d.js.map": "/app_concurso_tapas/static/js/main.c56ae95d.js.map",
+    "main.34148993.css.map": "/app_concurso_tapas/static/css/main.34148993.css.map",
+    "main.190dc89f.js.map": "/app_concurso_tapas/static/js/main.190dc89f.js.map",
     "453.05bf1b2d.chunk.js.map": "/app_concurso_tapas/static/js/453.05bf1b2d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.28d2e6a6.css",
-    "static/js/main.c56ae95d.js"
+    "static/css/main.34148993.css",
+    "static/js/main.190dc89f.js"
   ]
 }
