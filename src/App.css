@@ -10,7 +10,8 @@ body, .App {
 .App {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  min-height: 100dvh; /* mejor para móviles */
 }
 
 /* ====================== HEADER ====================== */
@@ -36,6 +37,7 @@ body, .App {
   align-items: center;
   padding: 30px 20px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* ====================== DASHBOARD / INICIO ====================== */
