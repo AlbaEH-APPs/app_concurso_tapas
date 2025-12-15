@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 // Función para renderizar estrellas según la media
 const renderStars = (media) => {
@@ -9,7 +9,7 @@ const renderStars = (media) => {
     if (media >= i) {
       stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "18px" }}>★</span>);
     } else if (media >= i - 0.5) {
-      stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "18px" }}>☆</span>); // media estrella
+      stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "18px" }}>☆</span>);
     } else {
       stars.push(<span key={i} style={{ color: "#ccc", fontSize: "18px" }}>★</span>);
     }
@@ -21,21 +21,21 @@ const Ranking = () => {
   const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
-    // Escuchar cambios en la colección "tapas"
+    // Escuchar en tiempo real cambios en la colección "tapas"
     const tapasCol = collection(db, "tapas");
     const unsubscribeTapas = onSnapshot(tapasCol, async (tapasSnapshot) => {
       const tapasData = [];
 
+      // Para cada tapa, escuchar los votos en tiempo real
       for (const tapaDoc of tapasSnapshot.docs) {
         const tapaId = tapaDoc.id;
-        // Escuchar los votos de esta tapa en tiempo real
+
+        // Snapshot de votos en tiempo real para esta tapa
         const votosQuery = query(collection(db, "votos"), where("tapaId", "==", tapaId));
-        
-        // Para cada tapa, suscribimos un snapshot temporal para calcular la media
         const votosSnapshot = await new Promise((resolve) => {
           const unsub = onSnapshot(votosQuery, (snapshot) => {
             resolve(snapshot);
-            unsub(); // desuscribimos inmediatamente, solo queremos la snapshot inicial
+            unsub(); // Solo queremos la snapshot inicial aquí
           });
         });
 
@@ -46,14 +46,12 @@ const Ranking = () => {
         tapasData.push({
           id: tapaId,
           nombre: tapaDoc.data().nombre,
-          descripcion: tapaDoc.data().descripcion,
-          fotoURL: tapaDoc.data().fotoURL,
           media,
           numVotos: votosData.length
         });
       }
 
-      // Ordenamos por media descendente
+      // Ordenar por media descendente
       tapasData.sort((a, b) => b.media - a.media);
       setRanking(tapasData);
     });
@@ -64,12 +62,21 @@ const Ranking = () => {
   return (
     <div className="ranking-container">
       {ranking.map((tapa, index) => (
-        <div key={tapa.id} className="ranking-item" style={{ marginBottom: "15px", border: "1px solid #ccc", padding: "10px", borderRadius: "5px" }}>
+        <div
+          key={tapa.id}
+          className="ranking-item"
+          style={{
+            marginBottom: "10px",
+            border: "1px solid #ccc",
+            padding: "10px",
+            borderRadius: "5px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}
+        >
           <span style={{ fontWeight: "bold" }}>{index + 1}. {tapa.nombre}</span>
-          {tapa.fotoURL && (
-            <img src={tapa.fotoURL} alt={tapa.nombre} style={{ maxWidth: "200px", display: "block", marginTop: "5px", borderRadius: "5px" }} />
-          )}
-          <div style={{ marginTop: "5px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             {renderStars(tapa.media)}
             <span style={{ marginLeft: "5px", fontSize: "14px", color: "#555" }}>
               ({tapa.media.toFixed(1)} / 5 de {tapa.numVotos} voto{tapa.numVotos !== 1 ? "s" : ""})
