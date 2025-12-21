@@ -5,6 +5,7 @@ import Ranking from "./components/Ranking";
 import Login from "./components/Login";
 import RegistroAccesos from "./components/RegistroAccesos";
 import GestionarParticipantes from "./components/GestionarParticipantes";
+import ConfirmarAsistencia from "./components/ConfirmarAsistencia";
 import "./App.css";
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
   }, []);
 
   const handleLogin = (datosUsuario) => {
+    console.log("🔍 Usuario logueado:", datosUsuario); // DEBUG
+    console.log("🔍 Es admin?", datosUsuario.esAdmin); // DEBUG
     setUsuario(datosUsuario);
     localStorage.setItem("usuarioTapas", JSON.stringify(datosUsuario));
   };
@@ -69,6 +72,10 @@ function App() {
             <h2>Bienvenido/a {usuario.nombre} 🍴</h2>
             <p>Elige una opción para continuar:</p>
             <div className="tarjetas">
+              <div className="tarjeta" onClick={() => setSeccion("asistencia")}>
+                <h3>✅ Confirmar Asistencia</h3>
+                <p>Confirma si vas a asistir al concurso.</p>
+              </div>
               <div className="tarjeta" onClick={() => setSeccion("inscripciones")}>
                 <h3>Inscripciones</h3>
                 <p>Sube tu tapa para participar en el concurso.</p>
@@ -104,6 +111,7 @@ function App() {
               ← Volver al inicio
             </button>
 
+            {seccion === "asistencia" && <ConfirmarAsistencia usuario={usuario} />}
             {seccion === "inscripciones" && <SubirFoto usuario={usuario} />}
             {seccion === "tapas" && <TapaList />}
             {seccion === "ranking" && <Ranking />}
