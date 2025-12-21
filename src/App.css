@@ -10,23 +10,58 @@ body, .App {
 .App {
   display: flex;
   flex-direction: column;
-  /* min-height: 100vh; */
   min-height: 100dvh; /* mejor para móviles */
 }
 
 /* ====================== HEADER ====================== */
 .App-header {
-  background-color: #ff6347;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 20px 15px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .App-header h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 28px;
   font-weight: 700;
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+}
+
+.usuario-info span {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.btn-logout {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: 2px solid white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: white;
+  color: #667eea;
 }
 
 /* ====================== MAIN CONTENT ====================== */
@@ -48,6 +83,13 @@ body, .App {
 
 .inicio p {
   margin-bottom: 20px;
+}
+
+.subtitulo-menu {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .tarjetas {
@@ -85,6 +127,17 @@ body, .App {
   box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
+/* Estilo para tarjeta de admin */
+.tarjeta.admin {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.tarjeta.admin h3,
+.tarjeta.admin p {
+  color: white;
+}
+
 /* ====================== SECCIÓN ACTIVA ====================== */
 .seccion-activa {
   width: 100%;
@@ -113,559 +166,7 @@ body, .App {
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-/* ====================== TARJETAS TAPAS ====================== */
-.tapa-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: #fff;
-  max-width: 320px;
-  margin: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
-.tapa-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.tapa-card img {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 15px;
-}
-
-.tapa-card h3 {
-  margin: 10px 0 5px;
-  font-size: 1.4rem;
-  color: #333;
-  text-align: center;
-}
-
-.tapa-card p {
-  font-size: 0.95rem;
-  color: #555;
-  text-align: center;
-}
-
-.tapa-card p:last-of-type {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-/* Botón de votar */
-.votar-btn {
-  background-color: #ff6347;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  margin-top: 15px;
-}
-
-.votar-btn:hover:not(:disabled) {
-  background-color: #ff8261;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.votar-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* ====================== FOOTER ====================== */
-.footer {
-  background-color: #222;
-  color: #aaa;
-  padding: 20px 10px;
-  text-align: center;
-  flex-shrink: 0;
-  font-size: 0.9rem;
-}
-
-.footer .footer-text {
-  font-weight: 600;
-  color: #fff;
-  margin: 0 0 5px 0;
-}
-
-.footer .footer-subtext {
-  margin: 0;
-}
-
-/* ====================== RESPONSIVE ====================== */
-@media (max-width: 768px) {
-  .tarjetas {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .tarjeta {
-    width: 80%;
-    max-width: 300px;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  .tarjeta {
-    padding: 20px 15px;
-  }
-
-  .tarjeta h3 {
-    font-size: 1.2rem;
-  }
-
-  .tarjeta p {
-    font-size: 0.9rem;
-  }
-
-  .volver {
-    padding: 6px 12px;
-  }
-}
-
-/* ====================== SUBIR FOTO / FORMULARIO ======================
-.subir-form {
-  background-color: #fff;
-  padding: 30px 25px;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  max-width: 400px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.subir-form h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.subir-form input[type="text"],
-.subir-form input[type="file"],
-.subir-form textarea {
-  padding: 12px 15px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  width: 100%;
-  transition: border 0.3s, box-shadow 0.3s;
-}
-
-.subir-form input[type="text"]:focus,
-.subir-form input[type="file"]:focus,
-.subir-form textarea:focus {
-  outline: none;
-  border-color: #ff6347;
-  box-shadow: 0 0 6px rgba(255, 99, 71, 0.4);
-}
-
-.subir-form textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.subir-form button[type="submit"] {
-  background-color: #ff6347;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  margin-top: 10px;
-}
-
-.subir-form button[type="submit"]:hover {
-  background-color: #ff8261;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.subir-form button[type="submit"]:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-} */
-
-/* ====================== SUBIR FOTO / FORMULARIO ====================== */
-.subir-form {
-  background-color: #fff;
-  padding: 40px 30px; /* más espacio interior */
-  border-radius: 20px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.1);
-  max-width: 450px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centrado horizontal */
-  gap: 20px; /* espacio entre elementos */
-  box-sizing: border-box; /* asegurar padding dentro del contenedor */
-}
-
-.subir-form h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 1.6rem;
-  color: #333;
-}
-
-.subir-form input[type="text"],
-.subir-form input[type="file"],
-.subir-form textarea {
-  width: 100%; /* ocupa todo el ancho del contenedor */
-  padding: 12px 15px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  transition: border 0.3s, box-shadow 0.3s;
-  box-sizing: border-box; /* importante para que padding no rompa el ancho */
-}
-
-.subir-form input[type="text"]:focus,
-.subir-form input[type="file"]:focus,
-.subir-form textarea:focus {
-  outline: none;
-  border-color: #ff6347;
-  box-shadow: 0 0 8px rgba(255,99,71,0.4);
-}
-
-.subir-form textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.subir-form button[type="submit"] {
-  background-color: #ff6347;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  width: 100%;
-}
-
-.subir-form button[type="submit"]:hover {
-  background-color: #ff8261;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.subir-form button[type="submit"]:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* ====================== RESPONSIVE ====================== */
-@media (max-width: 480px) {
-  .subir-form {
-    padding: 25px 20px;
-  }
-
-  .subir-form h2 {
-    font-size: 1.4rem;
-  }
-
-  .subir-form textarea {
-    min-height: 80px;
-  }
-}
-
-
-/* ====================== LISTA DE TAPAS ====================== */
-.tapa-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.tapa-card {
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: #fff;
-  max-width: 320px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.tapa-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-}
-
-.tapa-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 15px;
-}
-
-.tapa-card h3 {
-  font-size: 1.4rem;
-  margin: 10px 0 5px;
-  color: #333;
-  text-align: center;
-}
-
-.tapa-card p {
-  font-size: 0.95rem;
-  color: #555;
-  text-align: center;
-}
-
-.votar-btn {
-  margin-top: 15px;
-  background-color: #ff6347;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-.votar-btn:hover:not(:disabled) {
-  background-color: #ff8261;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.votar-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* ====================== RESPONSIVE TAPAS ====================== */
-@media (max-width: 768px) {
-  .tapa-list {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-/* ====================== RANKING ====================== */
-.ranking-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 600px;
-  margin-top: 20px;
-}
-
-.ranking-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #fff;
-  width: 100%;
-  padding: 15px 20px;
-  margin-bottom: 12px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.ranking-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-}
-
-.ranking-item span {
-  font-weight: 600;
-  color: #333;
-}
-
-.ranking-item img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Añade estos estilos a tu App.css existente */
-
-.App-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.App-header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.usuario-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 10px 20px;
-  border-radius: 25px;
-  backdrop-filter: blur(10px);
-}
-
-.usuario-info span {
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.btn-logout {
-  background-color: rgba(255, 255, 255, 0.3);
-  color: white;
-  border: 2px solid white;
-  padding: 8px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-logout:hover {
-  background-color: white;
-  color: #667eea;
-}
-
-/* Estilo para tarjeta de admin */
-.tarjeta.admin {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-}
-
-.tarjeta.admin h3,
-.tarjeta.admin p {
-  color: white;
-}
-
-/* Responsive para header */
-@media (max-width: 768px) {
-  .App-header {
-    padding: 15px 20px;
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .App-header h1 {
-    font-size: 22px;
-  }
-
-  .usuario-info {
-    width: 100%;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .btn-logout {
-    width: 100%;
-  }
-}
-
-/* Añade estos estilos a tu App.css existente */
-
-.App-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.App-header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.usuario-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 10px 20px;
-  border-radius: 25px;
-  backdrop-filter: blur(10px);
-}
-
-.usuario-info span {
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.btn-logout {
-  background-color: rgba(255, 255, 255, 0.3);
-  color: white;
-  border: 2px solid white;
-  padding: 8px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-logout:hover {
-  background-color: white;
-  color: #667eea;
-}
-
-/* Estilo para tarjeta de admin */
-.tarjeta.admin {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-}
-
-.tarjeta.admin h3,
-.tarjeta.admin p {
-  color: white;
-}
-
-/* ========================================
-   BANNER DE ASISTENCIA - NUEVO
-   ======================================== */
-
+/* ====================== BANNER DE ASISTENCIA ====================== */
 .banner-asistencia {
   display: flex;
   align-items: center;
@@ -812,15 +313,131 @@ body, .App {
   opacity: 1;
 }
 
-.subtitulo-menu {
-  color: #666;
-  font-size: 18px;
-  margin-bottom: 20px;
-  text-align: center;
+/* ====================== SUBIR FOTO / FORMULARIO ====================== */
+.subir-form {
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+  max-width: 450px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-sizing: border-box;
 }
 
-/* Responsive para banner */
+.subir-form h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.6rem;
+  color: #333;
+}
+
+.subir-form input[type="text"],
+.subir-form input[type="file"],
+.subir-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.subir-form input[type="text"]:focus,
+.subir-form input[type="file"]:focus,
+.subir-form textarea:focus {
+  outline: none;
+  border-color: #ff6347;
+  box-shadow: 0 0 8px rgba(255,99,71,0.4);
+}
+
+.subir-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.subir-form button[type="submit"] {
+  background-color: #ff6347;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  width: 100%;
+}
+
+.subir-form button[type="submit"]:hover {
+  background-color: #ff8261;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.subir-form button[type="submit"]:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* ====================== FOOTER ====================== */
+.footer {
+  background-color: #222;
+  color: #aaa;
+  padding: 20px 10px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.footer .footer-text {
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 5px 0;
+}
+
+.footer .footer-subtext {
+  margin: 0;
+}
+
+/* ====================== RESPONSIVE ====================== */
 @media (max-width: 768px) {
+  .App-header {
+    padding: 15px 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .App-header h1 {
+    font-size: 22px;
+  }
+
+  .usuario-info {
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-logout {
+    width: 100%;
+  }
+
+  .tarjetas {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tarjeta {
+    width: 80%;
+    max-width: 300px;
+  }
+
   .banner-asistencia {
     flex-direction: column;
     text-align: center;
@@ -848,28 +465,38 @@ body, .App {
     width: 100%;
     padding: 12px 20px;
   }
+
+  .subir-form {
+    padding: 25px 20px;
+  }
+
+  .subir-form h2 {
+    font-size: 1.4rem;
+  }
+
+  .subir-form textarea {
+    min-height: 80px;
+  }
 }
 
-/* Responsive para header */
-@media (max-width: 768px) {
-  .App-header {
-    padding: 15px 20px;
-    flex-direction: column;
-    text-align: center;
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
   }
 
-  .App-header h1 {
-    font-size: 22px;
+  .tarjeta {
+    padding: 20px 15px;
   }
 
-  .usuario-info {
-    width: 100%;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
+  .tarjeta h3 {
+    font-size: 1.2rem;
   }
 
-  .btn-logout {
-    width: 100%;
+  .tarjeta p {
+    font-size: 0.9rem;
+  }
+
+  .volver {
+    padding: 6px 12px;
   }
 }

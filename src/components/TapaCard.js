@@ -3,6 +3,7 @@ import { db } from "../firebase";
 import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import VotarTapa from "./VotarTapa";
 import { IMGBB_API_KEY_original } from "../config.js";
+import "../styles/TapaCard.css";
 
 const IMGBB_API_KEY = IMGBB_API_KEY_original;
 

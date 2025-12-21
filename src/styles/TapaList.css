@@ -1,0 +1,28 @@
+/* ====================== TAPAS CONCURSANTES ====================== */
+
+/* Grid de tapas - estilo simple como el original */
+.tapa-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* ====================== RESPONSIVE TAPAS ====================== */
+@media (max-width: 768px) {
+  .tapa-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tapa-list {
+    padding: 0 15px;
+  }
+}
