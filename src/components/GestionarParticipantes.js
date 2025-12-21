@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { collection, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import {doc, setDoc, getDoc} from "firebase/firestore";
 import { db } from "../firebase";
-import "./GestionarParticipantes.css";
+import "../styles/GestionarParticipantes.css";
 
 function GestionarParticipantes() {
   const [participantes, setParticipantes] = useState([]);
@@ -172,6 +172,7 @@ function GestionarParticipantes() {
                   </span>
                   {participante.esAdmin && (
                     <span className="badge-admin">👑 Admin</span>
+
                   )}
                 </div>
                 <div className="participante-acciones">

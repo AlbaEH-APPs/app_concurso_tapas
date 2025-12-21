@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import "./RegistroAccesos.css";
+import "../styles/RegistroAccesos.css";
 
 function RegistroAccesos() {
   const [accesos, setAccesos] = useState([]);

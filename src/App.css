@@ -599,3 +599,277 @@ body, .App {
     width: 100%;
   }
 }
+
+/* Añade estos estilos a tu App.css existente */
+
+.App-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+}
+
+.usuario-info span {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.btn-logout {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: 2px solid white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: white;
+  color: #667eea;
+}
+
+/* Estilo para tarjeta de admin */
+.tarjeta.admin {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.tarjeta.admin h3,
+.tarjeta.admin p {
+  color: white;
+}
+
+/* ========================================
+   BANNER DE ASISTENCIA - NUEVO
+   ======================================== */
+
+.banner-asistencia {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px 30px;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-asistencia::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
+}
+
+.banner-asistencia:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Banner URGENTE (no confirmado) */
+.banner-asistencia.urgente {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 40px rgba(255, 107, 107, 0.6);
+  }
+}
+
+/* Banner CONFIRMADO */
+.banner-asistencia.confirmado {
+  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+  color: white;
+}
+
+.banner-icono {
+  font-size: 60px;
+  flex-shrink: 0;
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.banner-contenido {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-contenido h3 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.banner-contenido p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+.banner-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item strong {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.banner-accion {
+  flex-shrink: 0;
+}
+
+.btn-banner {
+  background: white;
+  color: #ff6b6b;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.banner-asistencia.urgente .btn-banner {
+  color: #ff6b6b;
+}
+
+.banner-asistencia.confirmado .btn-banner {
+  color: #37b24d;
+  background: white;
+}
+
+.btn-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ver-lista {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.ver-lista:hover {
+  opacity: 1;
+}
+
+.subtitulo-menu {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Responsive para banner */
+@media (max-width: 768px) {
+  .banner-asistencia {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .banner-icono {
+    font-size: 50px;
+  }
+
+  .banner-contenido h3 {
+    font-size: 20px;
+  }
+
+  .banner-contenido p {
+    font-size: 14px;
+  }
+
+  .banner-stats {
+    justify-content: center;
+  }
+
+  .btn-banner {
+    width: 100%;
+    padding: 12px 20px;
+  }
+}
+
+/* Responsive para header */
+@media (max-width: 768px) {
+  .App-header {
+    padding: 15px 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .App-header h1 {
+    font-size: 22px;
+  }
+
+  .usuario-info {
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-logout {
+    width: 100%;
+  }
+}

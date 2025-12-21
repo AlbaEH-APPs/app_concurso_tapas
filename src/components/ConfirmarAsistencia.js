@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { collection, doc, setDoc, getDoc, getDocs, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import "./ConfirmarAsistencia.css";
+import "../styles/ConfirmarAsistencia.css";
 
-function ConfirmarAsistencia({ usuario }) {
+function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
   const [confirmados, setConfirmados] = useState([]);
   const [miEstado, setMiEstado] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -53,6 +53,11 @@ function ConfirmarAsistencia({ usuario }) {
       setMensaje("✅ ¡Asistencia confirmada! Nos vemos en el concurso");
       await cargarAsistencias();
       
+      // Notificar al componente padre para actualizar estadísticas
+      if (onActualizarEstadisticas) {
+        onActualizarEstadisticas();
+      }
+      
     } catch (error) {
       console.error("Error al confirmar:", error);
       setMensaje("❌ Error al confirmar. Inténtalo de nuevo.");
@@ -76,6 +81,11 @@ function ConfirmarAsistencia({ usuario }) {
 
       setMensaje("ℹ️ Asistencia cancelada");
       await cargarAsistencias();
+      
+      // Notificar al componente padre para actualizar estadísticas
+      if (onActualizarEstadisticas) {
+        onActualizarEstadisticas();
+      }
       
     } catch (error) {
       console.error("Error al cancelar:", error);
@@ -213,7 +223,7 @@ function ConfirmarAsistencia({ usuario }) {
         <h4>📍 Detalles del evento</h4>
         <div className="detalles">
           <p><strong>📅 Fecha:</strong> 5 de Enero de 2026 (Noche de Reyes)</p>
-          <p><strong>🕐 Hora:</strong> A partir de las 18 de la tarde</p>
+          <p><strong>🕐 Hora:</strong> A partir de las 18</p>
           <p><strong>📍 Lugar:</strong> Calle Palencia 13 2º B</p>
         </div>
         <p className="nota-info">

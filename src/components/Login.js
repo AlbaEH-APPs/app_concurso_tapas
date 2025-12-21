@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import "./Login.css";
+import "../styles/Login.css";
 
 function Login({ onLogin }) {
   const [participantes, setParticipantes] = useState([]);
