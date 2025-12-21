@@ -513,3 +513,89 @@ body, .App {
   object-fit: cover;
   border-radius: 8px;
 }
+
+/* Añade estos estilos a tu App.css existente */
+
+.App-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+}
+
+.usuario-info span {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.btn-logout {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: 2px solid white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: white;
+  color: #667eea;
+}
+
+/* Estilo para tarjeta de admin */
+.tarjeta.admin {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.tarjeta.admin h3,
+.tarjeta.admin p {
+  color: white;
+}
+
+/* Responsive para header */
+@media (max-width: 768px) {
+  .App-header {
+    padding: 15px 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .App-header h1 {
+    font-size: 22px;
+  }
+
+  .usuario-info {
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-logout {
+    width: 100%;
+  }
+}

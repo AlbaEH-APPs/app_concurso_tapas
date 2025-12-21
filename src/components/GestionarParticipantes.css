@@ -1,0 +1,288 @@
+.gestionar-participantes {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.gestionar-participantes h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+.mensaje {
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mensaje.exito {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.mensaje.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.agregar-participante {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.agregar-participante h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #667eea;
+}
+
+.form-agregar {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.form-agregar input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.form-agregar input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.checkbox-label span {
+  font-size: 14px;
+  color: #555;
+}
+
+.btn-agregar {
+  padding: 12px 30px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-agregar:hover:not(:disabled) {
+  background-color: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-agregar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lista-participantes {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.lista-participantes h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.sin-participantes {
+  text-align: center;
+  color: #999;
+  padding: 40px;
+  font-style: italic;
+}
+
+.tabla-participantes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.participante-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.participante-item:hover {
+  background-color: #e9ecef;
+  transform: translateX(5px);
+}
+
+.participante-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.participante-nombre {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.badge-admin {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.participante-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-admin,
+.btn-eliminar {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-admin {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.btn-admin:hover:not(:disabled) {
+  background-color: #ffb300;
+  transform: translateY(-2px);
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.btn-admin:disabled,
+.btn-eliminar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.info-importante {
+  background-color: #e7f3ff;
+  border-left: 4px solid #2196f3;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.info-importante h4 {
+  margin-top: 0;
+  color: #1976d2;
+}
+
+.info-importante ul {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+}
+
+.info-importante li {
+  margin: 8px 0;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gestionar-participantes {
+    padding: 15px;
+  }
+
+  .agregar-participante,
+  .lista-participantes {
+    padding: 20px;
+  }
+
+  .form-agregar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-agregar input[type="text"],
+  .btn-agregar {
+    width: 100%;
+  }
+
+  .participante-item {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .participante-acciones {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-admin,
+  .btn-eliminar {
+    flex: 1;
+  }
+}
