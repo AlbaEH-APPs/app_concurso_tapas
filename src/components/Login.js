@@ -74,6 +74,10 @@ function Login({ onLogin }) {
         fechaLogin: new Date().toISOString()
       };
 
+      // --- AQUÍ ESTÁ LA CLAVE ---
+      // Guardamos el nombre en el localStorage para que 'VotarTapa.js' sepa quién es
+      localStorage.setItem("usuarioActivo", usuarioSeleccionado);
+
       // Llamar al callback con los datos del usuario
       onLogin(usuario);
 

@@ -1,116 +1,178 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { doc, getDoc, setDoc, collection, query, where, onSnapshot, Timestamp } from "firebase/firestore";
-
-// Función para renderizar estrellas rellenas según la media
-const renderStars = (media) => {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (media >= i) {
-      stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "20px" }}>★</span>);
-    } else if (media >= i - 0.5) {
-      stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "20px" }}>☆</span>);
-    } else {
-      stars.push(<span key={i} style={{ color: "#ccc", fontSize: "20px" }}>★</span>);
-    }
-  }
-  return stars;
-};
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import "../styles/VotarTapa.css";
 
 const VotarTapa = ({ tapaId }) => {
-  const [votado, setVotado] = useState(false);
   const [puntuacion, setPuntuacion] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [media, setMedia] = useState(0);
-  const [numVotos, setNumVotos] = useState(0);
+  const [hoverPuntuacion, setHoverPuntuacion] = useState(0);
+  const [yaVotado, setYaVotado] = useState(false);
+  const [votando, setVotando] = useState(false);
 
-  const [userId] = useState(() =>
-    localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9)
-  );
+  const [userName, setUserName] = useState(null);   // Persona seleccionada
+  const [deviceId, setDeviceId] = useState(null);   // ID único del dispositivo
 
+  /* =====================================================
+     1. Obtener o crear ID único del dispositivo
+  ===================================================== */
   useEffect(() => {
-    localStorage.setItem("userId", userId);
+    let storedDeviceId = localStorage.getItem("deviceId");
 
-    // Comprobar si el usuario ya votó
-    const checkVoto = async () => {
+    if (!storedDeviceId) {
+      storedDeviceId = `device_${Date.now()}_${Math.random()
+        .toString(36)
+        .substring(2, 9)}`;
+      localStorage.setItem("deviceId", storedDeviceId);
+    }
+
+    setDeviceId(storedDeviceId);
+  }, []);
+
+  /* =====================================================
+     2. Obtener la persona activa ("quién soy")
+  ===================================================== */
+  useEffect(() => {
+    const nombreGuardado = localStorage.getItem("usuarioActivo");
+    setUserName(nombreGuardado);
+  }, []);
+
+  /* =====================================================
+     3. Verificar si ESA PERSONA ya votó esta tapa
+  ===================================================== */
+  useEffect(() => {
+    const verificarVoto = async () => {
+      if (!tapaId || !userName) return;
+
       try {
-        const docRef = doc(db, "votos", `${userId}_${tapaId}`);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setVotado(true);
-          setPuntuacion(docSnap.data().puntuacion);
+        const votosQuery = query(
+          collection(db, "votos"),
+          where("tapaId", "==", tapaId),
+          where("userName", "==", userName)
+        );
+
+        const votosSnapshot = await getDocs(votosQuery);
+
+        if (!votosSnapshot.empty) {
+          const votoData = votosSnapshot.docs[0].data();
+          setYaVotado(true);
+          setPuntuacion(votoData.puntuacion || 0);
+        } else {
+          // Si cambia de persona, permitimos votar de nuevo
+          setYaVotado(false);
+          setPuntuacion(0);
         }
       } catch (error) {
-        console.error("Error comprobando el voto:", error);
+        console.error("Error verificando voto:", error);
       }
     };
-    checkVoto();
 
-    // Escuchar todos los votos para calcular media en tiempo real
-    const q = query(collection(db, "votos"), where("tapaId", "==", tapaId));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const votosData = snapshot.docs.map(doc => doc.data().puntuacion);
-      const suma = votosData.reduce((acc, val) => acc + val, 0);
-      const promedio = votosData.length ? (suma / votosData.length) : 0;
-      setMedia(promedio);
-      setNumVotos(votosData.length);
-    });
+    verificarVoto();
+  }, [tapaId, userName]);
 
-    return () => unsubscribe();
-  }, [tapaId, userId]);
+  /* =====================================================
+     4. Enviar voto
+  ===================================================== */
+  const handleVotar = async () => {
+    if (!userName) {
+      alert("Por favor, selecciona quién eres antes de votar");
+      return;
+    }
 
-  const votar = async (valor) => {
-    if (votado) return;
+    if (puntuacion === 0) {
+      alert("Por favor, selecciona una puntuación del 1 al 5");
+      return;
+    }
+
+    if (yaVotado) {
+      alert("Ya has votado esta tapa");
+      return;
+    }
+
+    setVotando(true);
+
     try {
-      const docRef = doc(db, "votos", `${userId}_${tapaId}`);
-      await setDoc(docRef, {
-        userId,
+      await addDoc(collection(db, "votos"), {
         tapaId,
-        puntuacion: valor,
-        votedAt: Timestamp.now()
+        userName,
+        deviceId,
+        puntuacion,
+        fecha: new Date().toISOString(),
       });
-      setVotado(true);
-      setPuntuacion(valor);
-      // No necesitamos actualizar votos localmente; onSnapshot lo hará
+
+      setYaVotado(true);
+      alert(`¡Gracias por tu voto, ${userName}!`);
     } catch (error) {
       console.error("Error al votar:", error);
+      alert("Hubo un error al registrar tu voto");
+    } finally {
+      setVotando(false);
     }
   };
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      {/* Estrellas para que el usuario vote */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {[1, 2, 3, 4, 5].map((num) => (
-          <span
-            key={num}
-            style={{
-              cursor: votado ? "default" : "pointer",
-              color: num <= (hover || puntuacion) ? "#FFD700" : "#ccc",
-              fontSize: "24px",
-              marginRight: "5px",
-            }}
-            onClick={() => votar(num)}
-            onMouseEnter={() => !votado && setHover(num)}
-            onMouseLeave={() => !votado && setHover(0)}
-          >
-            ★
+  /* =====================================================
+     5. Render estrellas
+  ===================================================== */
+  const renderEstrellas = () => {
+    const estrellas = [];
+    const puntuacionMostrar = hoverPuntuacion || puntuacion;
+
+    for (let i = 1; i <= 5; i++) {
+      estrellas.push(
+        <span
+          key={i}
+          className={`voto-estrella ${
+            i <= puntuacionMostrar ? "filled" : "empty"
+          } ${yaVotado ? "disabled" : ""}`}
+          onClick={() => !yaVotado && setPuntuacion(i)}
+          onMouseEnter={() => !yaVotado && setHoverPuntuacion(i)}
+          onMouseLeave={() => !yaVotado && setHoverPuntuacion(0)}
+        >
+          {i <= puntuacionMostrar ? "★" : "☆"}
+        </span>
+      );
+    }
+
+    return estrellas;
+  };
+
+  /* =====================================================
+     6. UI cuando ya votó
+  ===================================================== */
+  if (yaVotado) {
+    return (
+      <div className="voto-confirmado">
+        <div className="voto-confirmado-icono">✓</div>
+        <div className="voto-confirmado-contenido">
+          <span className="voto-confirmado-titulo">¡Ya has votado!</span>
+          <span className="voto-confirmado-texto">
+            {userName} · {puntuacion} estrellas
           </span>
-        ))}
-        {votado && <span style={{ marginLeft: "10px" }}>Puntuaste: {puntuacion}</span>}
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     7. UI normal
+  ===================================================== */
+  return (
+    <div className="votar-tapa">
+      <div className="votar-header">
+        <span className="votar-titulo">¿Qué te pareció?</span>
+        <span className="votar-subtitulo">
+          {userName ? `Votando como ${userName}` : "Selecciona quién eres"}
+        </span>
       </div>
 
-      {/* Media de todos los votos */}
-      <div style={{ marginTop: "5px", fontSize: "14px", color: "#555", display: "flex", alignItems: "center" }}>
-        {numVotos > 0 ? (
-          <>
-            {renderStars(media)}
-            <span style={{ marginLeft: "5px" }}>({media.toFixed(1)} / 5 de {numVotos} voto{numVotos > 1 ? 's' : ''})</span>
-          </>
-        ) : (
-          <span>Aún no hay votos</span>
-        )}
-      </div>
+      <div className="votar-estrellas">{renderEstrellas()}</div>
+
+      <button
+        onClick={handleVotar}
+        disabled={votando || puntuacion === 0}
+        className="votar-btn"
+      >
+        {votando ? "Enviando..." : "Enviar voto"}
+      </button>
     </div>
   );
 };
