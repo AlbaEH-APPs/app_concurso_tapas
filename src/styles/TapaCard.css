@@ -1,47 +1,57 @@
-/* ====================== TARJETA DE TAPA PROFESIONAL ====================== */
+/* =============================================
+   TARJETA DE TAPA - DISEÑO PROFESIONAL
+   ============================================= */
+
 .tapa-card {
-  background-color: #fff;
+  background: #ffffff;
   border-radius: 24px;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  /* ALTURA FIJA para que todas las tarjetas sean iguales */
-  height: 620px;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  height: 100%;
+  min-height: 620px;
 }
 
 .tapa-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #ffd700, #6a1b9a, #1565c0, #ffd700);
+  background-size: 300% 300%;
+  border-radius: 24px;
+  z-index: -1;
   opacity: 0;
   transition: opacity 0.4s ease;
-  pointer-events: none;
-  z-index: 1;
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .tapa-card:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 0 20px 50px rgba(102, 126, 234, 0.2);
-  border-color: rgba(102, 126, 234, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(106, 27, 154, 0.2);
+  border-color: rgba(255, 215, 0, 0.5);
 }
 
 .tapa-card:hover::before {
-  opacity: 1;
+  opacity: 0.6;
 }
 
-/* Contenedor de imagen mejorado - ALTURA FIJA */
+/* ===== IMAGEN DE TAPA ===== */
 .tapa-card-imagen {
   width: 100%;
-  height: 240px; /* Altura fija para todas las imágenes */
-  flex-shrink: 0; /* No se encoge */
+  height: 260px;
+  flex-shrink: 0;
   overflow: hidden;
   position: relative;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -53,10 +63,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 50%;
-  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  height: 60%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
   pointer-events: none;
   z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.tapa-card:hover .tapa-card-imagen::after {
+  opacity: 1;
 }
 
 .tapa-card-imagen img {
@@ -69,38 +85,60 @@
 }
 
 .tapa-card:hover .tapa-card-imagen img {
-  transform: scale(1.15) rotate(2deg);
+  transform: scale(1.08);
 }
 
-/* Badge de posición premium */
+.tapa-sin-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  color: rgba(255, 255, 255, 0.4);
+  animation: gentleFloat 4s ease-in-out infinite;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes gentleFloat {
+  0%, 100% { 
+    transform: translateY(0) scale(1);
+  }
+  50% { 
+    transform: translateY(-15px) scale(1.05);
+  }
+}
+
+/* ===== BADGES DE POSICIÓN ===== */
 .tapa-badge {
   position: absolute;
   top: 20px;
   left: 20px;
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.95);
   color: #333;
-  padding: 10px 20px;
-  border-radius: 30px;
+  padding: 12px 24px;
+  border-radius: 40px;
   font-weight: 800;
   font-size: 0.95rem;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: 8px;
-  backdrop-filter: blur(12px);
+  gap: 10px;
+  backdrop-filter: blur(10px);
   border: 2px solid white;
-  animation: slideInLeft 0.6s ease-out;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: slideInBadge 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-@keyframes slideInLeft {
+@keyframes slideInBadge {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-60px) scale(0.7);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -108,79 +146,89 @@
   background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
   color: white;
   border-color: #FFE55C;
-  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+  box-shadow: 0 8px 40px rgba(255, 215, 0, 0.7);
+  animation: pulseGold 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseGold {
+  0%, 100% {
+    box-shadow: 0 8px 40px rgba(255, 215, 0, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 50px rgba(255, 215, 0, 0.9);
+    transform: scale(1.02);
+  }
 }
 
 .tapa-badge.plata {
-  background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 100%);
+  background: linear-gradient(135deg, #F5F5F5 0%, #C0C0C0 100%);
   color: #4a5568;
-  border-color: #F5F5F5;
-  box-shadow: 0 8px 30px rgba(192, 192, 192, 0.5);
+  border-color: #FFFFFF;
+  box-shadow: 0 8px 40px rgba(192, 192, 192, 0.7);
 }
 
 .tapa-badge.bronce {
   background: linear-gradient(135deg, #E6A157 0%, #CD7F32 100%);
   color: white;
   border-color: #F4C896;
-  box-shadow: 0 8px 30px rgba(205, 127, 50, 0.5);
+  box-shadow: 0 8px 40px rgba(205, 127, 50, 0.7);
 }
 
-/* Contenido de la tarjeta - SE AJUSTA AL ESPACIO RESTANTE */
+/* ===== CONTENIDO DE LA TARJETA ===== */
 .tapa-card-contenido {
-  padding: 25px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  flex: 1; /* Ocupa el espacio restante */
+  flex: 1;
   position: relative;
-  z-index: 2;
-  min-height: 0; /* Permite que el contenido se ajuste */
+  gap: 16px;
 }
 
 .tapa-card-nombre {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 800;
-  color: #2d3748;
-  margin-bottom: 12px;
+  color: #1e293b;
+  margin: 0;
   line-height: 1.3;
-  /* ALTURA FIJA para 2 líneas */
-  height: 58px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-family: 'Playfair Display', serif;
+  min-height: 60px;
 }
 
 .tapa-card-descripcion {
-  font-size: 0.95rem;
-  color: #718096;
-  line-height: 1.6;
-  margin-bottom: 18px;
-  /* ALTURA FIJA para 3 líneas */
-  height: 76px;
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  min-height: 75px;
 }
 
-/* Sección de valoración premium - ALTURA FIJA */
+/* ===== SECCIÓN DE VALORACIÓN ===== */
 .tapa-card-valoracion {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-radius: 16px;
-  margin-bottom: 18px;
   border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
-  flex-shrink: 0; /* No se encoge */
-  height: 70px; /* Altura fija */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
 }
 
 .tapa-card:hover .tapa-card-valoracion {
-  background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   border-color: #cbd5e0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
 .tapa-estrellas {
@@ -190,254 +238,279 @@
 }
 
 .tapa-estrellas .star {
-  font-size: 22px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  font-size: 26px;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .tapa-card:hover .tapa-estrellas .star.filled,
 .tapa-card:hover .tapa-estrellas .star.half {
   transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.4));
 }
 
-.tapa-estrellas .star.filled {
-  color: #FFD700;
-}
-
+.tapa-estrellas .star.filled,
 .tapa-estrellas .star.half {
   color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
 }
 
 .tapa-estrellas .star.empty {
-  color: #E2E8F0;
+  color: #cbd5e0;
 }
 
 .tapa-puntuacion-box {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 6px;
 }
 
 .tapa-puntuacion {
-  font-size: 1.8rem;
+  font-size: 2.25rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6a1b9a 0%, #1565c0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -1px;
 }
 
 .tapa-num-votos {
   font-size: 0.8rem;
-  color: #a0aec0;
-  font-weight: 600;
+  color: #94a3b8;
+  font-weight: 700;
   background: white;
-  padding: 4px 10px;
-  border-radius: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e2e8f0;
 }
 
-/* Sección de subida de foto mejorada */
+/* ===== SECCIÓN DE SUBIDA DE FOTO ===== */
 .tapa-upload-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 15px;
-  padding: 18px;
-  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  gap: 16px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(106, 27, 154, 0.04) 0%, rgba(21, 101, 192, 0.04) 100%);
   border-radius: 16px;
   border: 2px dashed #cbd5e0;
   transition: all 0.3s ease;
-  flex-shrink: 0;
 }
 
 .tapa-upload-section:hover {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #edf2f7 0%, #e6effa 100%);
+  border-color: #6a1b9a;
+  background: linear-gradient(135deg, rgba(106, 27, 154, 0.08) 0%, rgba(21, 101, 192, 0.08) 100%);
+  box-shadow: 0 4px 20px rgba(106, 27, 154, 0.1);
 }
 
 .upload-label {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  gap: 12px;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, #6a1b9a 0%, #1565c0 100%);
   color: white;
-  border-radius: 12px;
+  border-radius: 50px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 0.95rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 6px 25px rgba(106, 27, 154, 0.35);
   border: 2px solid transparent;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.3px;
 }
 
 .upload-label:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
-  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 35px rgba(106, 27, 154, 0.45);
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+.upload-label:active {
+  transform: translateY(-1px);
 }
 
 .upload-icon {
-  font-size: 1.3rem;
-  animation: bounce 2s ease-in-out infinite;
+  font-size: 1.4rem;
+  animation: bounce 2.5s ease-in-out infinite;
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%, 100% { 
+    transform: translateY(0);
+  }
+  50% { 
+    transform: translateY(-5px);
+  }
 }
 
 .upload-input {
   display: none;
 }
 
+.upload-preview {
+  width: 100%;
+  max-height: 200px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .upload-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  gap: 12px;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  border: none;
-  border-radius: 12px;
+  border: 2px solid transparent;
+  border-radius: 50px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(72, 187, 120, 0.3);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.35);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.3px;
 }
 
 .upload-btn:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4);
+  box-shadow: 0 10px 35px rgba(16, 185, 129, 0.45);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.upload-btn:active:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .upload-btn:disabled {
-  background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.7;
   box-shadow: none;
 }
 
 .spinner {
-  animation: spin 1s linear infinite;
+  animation: rotate 1s linear infinite;
 }
 
-@keyframes spin {
+@keyframes rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Etiqueta de "Ya votaste" premium */
+/* ===== ETIQUETA "YA VOTASTE" ===== */
 .tapa-votado {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  gap: 12px;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  border-radius: 12px;
+  border-radius: 50px;
   font-weight: 700;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 20px rgba(72, 187, 120, 0.3);
+  font-size: 1rem;
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
   border: 2px solid rgba(255, 255, 255, 0.2);
-  margin-top: auto; /* Se pega al fondo */
-  flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.3px;
+  margin-top: auto;
 }
 
-/* Botón votar al fondo */
-.tapa-card-contenido > :last-child {
-  margin-top: auto; /* Empuja el último elemento al fondo */
+/* ===== AJUSTE PARA EMPUJAR BOTÓN AL FONDO ===== */
+.tapa-card-contenido > *:last-child {
+  margin-top: auto;
 }
 
-/* Sin imagen placeholder mejorado */
-.tapa-sin-imagen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 100px;
-  color: rgba(255, 255, 255, 0.5);
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-/* ====================== RESPONSIVE ====================== */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .tapa-card {
-    height: auto; /* En móviles puede ser flexible */
     min-height: 580px;
+  }
+
+  .tapa-card-imagen {
+    height: 240px;
+  }
+
+  .tapa-card-contenido {
+    padding: 28px;
+  }
+
+  .tapa-card-nombre {
+    font-size: 1.4rem;
+    min-height: 56px;
+  }
+
+  .tapa-card-descripcion {
+    font-size: 0.95rem;
+    min-height: 70px;
+  }
+
+  .tapa-card-valoracion {
+    padding: 18px 20px;
+  }
+
+  .tapa-estrellas .star {
+    font-size: 24px;
+  }
+
+  .tapa-puntuacion {
+    font-size: 2rem;
+  }
+
+  .tapa-badge {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tapa-card {
+    min-height: 540px;
+    border-radius: 20px;
   }
 
   .tapa-card-imagen {
     height: 220px;
   }
 
+  .tapa-card-contenido {
+    padding: 24px;
+    gap: 14px;
+  }
+
   .tapa-card-nombre {
     font-size: 1.3rem;
-    height: 54px;
-  }
-
-  .tapa-card-contenido {
-    padding: 22px;
-  }
-
-  .tapa-card-valoracion {
-    padding: 14px;
-    height: auto;
-    min-height: 65px;
-  }
-
-  .tapa-puntuacion {
-    font-size: 1.6rem;
-  }
-
-  .tapa-estrellas .star {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .tapa-card {
-    height: auto;
-    min-height: 550px;
-  }
-
-  .tapa-card-imagen {
-    height: 200px;
-  }
-
-  .tapa-card-nombre {
-    font-size: 1.2rem;
-    height: auto;
-    min-height: 50px;
+    min-height: 52px;
   }
 
   .tapa-card-descripcion {
     font-size: 0.9rem;
-    height: auto;
-    min-height: 70px;
-    -webkit-line-clamp: 3;
-  }
-
-  .tapa-card-contenido {
-    padding: 20px;
+    min-height: 66px;
   }
 
   .tapa-card-valoracion {
     flex-direction: column;
-    gap: 10px;
-    padding: 12px;
-    height: auto;
+    gap: 14px;
+    padding: 16px;
   }
 
   .tapa-puntuacion-box {
@@ -445,24 +518,33 @@
   }
 
   .tapa-estrellas .star {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .tapa-puntuacion {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 
   .tapa-badge {
-    padding: 8px 14px;
+    padding: 9px 18px;
     font-size: 0.85rem;
-    top: 15px;
-    left: 15px;
+    top: 16px;
+    left: 16px;
   }
 
   .upload-label,
   .upload-btn,
   .tapa-votado {
-    padding: 11px 18px;
-    font-size: 0.9rem;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+
+  .tapa-upload-section {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .tapa-sin-imagen {
+    font-size: 90px;
   }
 }

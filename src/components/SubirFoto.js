@@ -152,7 +152,7 @@ const SubirFoto = () => {
           />
           <p className="form-hint">
             <span className="form-hint-icon">ℹ️</span>
-            El nombre debe ser claro y descriptivo
+            El nombre puede ser creativo y atractivo
           </p>
         </div>
 
@@ -170,7 +170,7 @@ const SubirFoto = () => {
           />
           <p className="form-hint">
             <span className="form-hint-icon">ℹ️</span>
-            Incluye ingredientes especiales o técnicas únicas
+            Incluye ingredientes  
           </p>
         </div>
 

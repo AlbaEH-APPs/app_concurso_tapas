@@ -7,18 +7,24 @@ import "../styles/TapaCard.css";
 
 const IMGBB_API_KEY = IMGBB_API_KEY_original;
 
-const TapaCard = ({ tapa }) => {
-  const [votos, setVotos] = useState(0);
+const TapaCard = ({ tapa, posicion }) => {
+  const [media, setMedia] = useState(0);
+  const [numVotos, setNumVotos] = useState(0);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Escucha los votos en tiempo real
   useEffect(() => {
-    const q = query(collection(db, "votos"), where("tapaId", "==", tapa.id));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setVotos(snapshot.docs.length);
+    const votosQuery = query(collection(db, "votos"), where("tapaId", "==", tapa.id));
+    const unsubscribe = onSnapshot(votosQuery, (snapshot) => {
+      const votos = snapshot.docs.map(doc => doc.data().puntuacion || 0);
+      const suma = votos.reduce((acc, val) => acc + val, 0);
+      const mediaCalculada = votos.length ? suma / votos.length : 0;
+      
+      setMedia(mediaCalculada);
+      setNumVotos(votos.length);
     });
+    
     return () => unsubscribe();
   }, [tapa.id]);
 
@@ -46,7 +52,6 @@ const TapaCard = ({ tapa }) => {
       const uploadPromise = new Promise((resolve, reject) => {
         reader.onloadend = async () => {
           const base64Data = reader.result.split(",")[1];
-
           const formData = new FormData();
           formData.append("key", IMGBB_API_KEY);
           formData.append("image", base64Data);
@@ -58,7 +63,7 @@ const TapaCard = ({ tapa }) => {
             });
             const data = await response.json();
             if (data.success) resolve(data.data.url);
-            else reject("Error subiendo la imagen a ImgBB");
+            else reject("Error subiendo la imagen");
           } catch (err) {
             reject(err);
           }
@@ -66,12 +71,9 @@ const TapaCard = ({ tapa }) => {
       });
 
       const imageUrl = await uploadPromise;
-
-      // Actualizamos Firestore
       const tapaRef = doc(db, "tapas", tapa.id);
       await updateDoc(tapaRef, { fotoURL: imageUrl });
 
-      // Actualizamos localmente
       tapa.fotoURL = imageUrl;
       setFile(null);
       setPreview(null);
@@ -83,65 +85,114 @@ const TapaCard = ({ tapa }) => {
     }
   };
 
-  return (
-    <div className="tapa-card" style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "15px" }}>
-      <h3>{tapa.nombre}</h3>
-      <p>{tapa.descripcion}</p>
+  const renderEstrellas = () => {
+    const estrellas = [];
+    const mediaRedondeada = Math.round(media * 2) / 2;
+    
+    for (let i = 1; i <= 5; i++) {
+      if (i <= mediaRedondeada) {
+        estrellas.push(<span key={i} className="star filled">★</span>);
+      } else if (i - 0.5 === mediaRedondeada) {
+        estrellas.push(<span key={i} className="star half">★</span>);
+      } else {
+        estrellas.push(<span key={i} className="star empty">☆</span>);
+      }
+    }
+    
+    return estrellas;
+  };
 
-      {tapa.fotoURL ? (
-        <img src={tapa.fotoURL} alt={tapa.nombre} style={{ maxWidth: "200px", borderRadius: "5px" }} />
-      ) : (
-        <div style={{ marginTop: "10px" }}>
-          <div className="file-upload" style={{ marginBottom: "10px" }}>
-            <label
-              htmlFor={`fileInput-${tapa.id}`}
-              style={{
-                display: "inline-block",
-                padding: "10px 20px",
-                backgroundColor: "#4CAF50",
-                color: "#fff",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              {file ? "Cambiar foto" : "Sube tu foto de la tapa"}
-            </label>
+  const getBadgeClass = () => {
+    if (posicion === 1) return "tapa-badge oro";
+    if (posicion === 2) return "tapa-badge plata";
+    if (posicion === 3) return "tapa-badge bronce";
+    return null;
+  };
+
+  const getBadgeEmoji = () => {
+    if (posicion === 1) return "🥇";
+    if (posicion === 2) return "🥈";
+    if (posicion === 3) return "🥉";
+    return null;
+  };
+
+  return (
+    <div className="tapa-card">
+      <div className="tapa-card-imagen">
+        {tapa.fotoURL ? (
+          <img src={tapa.fotoURL} alt={tapa.nombre} loading="lazy" />
+        ) : (
+          <div className="tapa-sin-imagen">🍽️</div>
+        )}
+        
+        {posicion <= 3 && (
+          <div className={getBadgeClass()}>
+            <span>{getBadgeEmoji()}</span>
+            <span>Posición {posicion}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="tapa-card-contenido">
+        <h3 className="tapa-card-nombre">{tapa.nombre}</h3>
+        <p className="tapa-card-descripcion">{tapa.descripcion}</p>
+
+        <div className="tapa-card-valoracion">
+          <div className="tapa-estrellas">
+            {renderEstrellas()}
+          </div>
+          
+          <div className="tapa-puntuacion-box">
+            <span className="tapa-puntuacion">{media.toFixed(1)}</span>
+            <span className="tapa-num-votos">{numVotos} {numVotos === 1 ? 'voto' : 'votos'}</span>
+          </div>
+        </div>
+
+        {!tapa.fotoURL && (
+          <div className="tapa-upload-section">
+            {!preview ? (
+              <label htmlFor={`fileInput-${tapa.id}`} className="upload-label">
+                <span className="upload-icon">📸</span>
+                <span>Subir foto de la tapa</span>
+              </label>
+            ) : (
+              <>
+                <div className="upload-preview">
+                  <img src={preview} alt="Vista previa" />
+                </div>
+                <button
+                  onClick={handleUpload}
+                  disabled={uploading}
+                  className="upload-btn"
+                >
+                  {uploading ? (
+                    <>
+                      <span className="spinner">⏳</span>
+                      <span>Subiendo...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>✓</span>
+                      <span>Confirmar foto</span>
+                    </>
+                  )}
+                </button>
+              </>
+            )}
+            
             <input
               id={`fileInput-${tapa.id}`}
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              style={{ display: "none" }}
+              className="upload-input"
               disabled={uploading}
             />
           </div>
+        )}
 
-          {preview && (
-            <div style={{ marginBottom: "10px" }}>
-              <p>Vista previa:</p>
-              <img src={preview} alt="Vista previa" style={{ maxWidth: "200px", borderRadius: "5px" }} />
-              <button
-                onClick={handleUpload}
-                disabled={uploading}
-                style={{
-                  display: "block",
-                  marginTop: "5px",
-                  padding: "10px 20px",
-                  backgroundColor: "#4CAF50",
-                  color: "#fff",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                {uploading ? "Subiendo..." : "Subir foto"}
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      <p>Votos: {votos}</p>
-      <VotarTapa tapaId={tapa.id} />
+        <VotarTapa tapaId={tapa.id} />
+      </div>
     </div>
   );
 };

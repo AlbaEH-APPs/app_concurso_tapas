@@ -1,0 +1,5 @@
+Mejoras
+1-Terminar el diseño
+2-En la cuenta de administrador, poner contraseña en registro de accesos y gestionar participantes
+3-Que las votaciones solo puedan realizarse a partir de una fecha y hora concreta
+4-No deja votar por el sistema de estrellas (mirar error)

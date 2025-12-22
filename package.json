@@ -14,6 +14,7 @@
     "web-vitals": "^2.1.4"
   },
   "homepage": "https://albaeh-apps.github.io/app_concurso_tapas",
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

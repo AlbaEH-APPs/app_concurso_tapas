@@ -153,7 +153,7 @@ function App() {
               <div className="banner-asistencia urgente" onClick={() => cambiarSeccion("asistencia")}>
                 <div className="banner-icono">⚠️</div>
                 <div className="banner-contenido">
-                  <h3>¡Confirma tu asistencia!</h3>
+                  <h3>¡Confirma tu asistencia! El plazo limite es hasta el 02/01/2026 </h3>
                   <p>Es importante saber cuántos vendrán para organizar el evento</p>
                   <div className="banner-stats">
                     <span className="stat-item">
