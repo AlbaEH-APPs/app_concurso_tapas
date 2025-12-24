@@ -125,7 +125,8 @@ function Login({ onLogin }) {
               {participantes.map((participante, index) => (
                 <option key={index} value={participante.nombre}>
                   {participante.nombre}
-                  {participante.esAdmin && " 👑"}
+                  {/* {participante.esAdmin && " 👑"} */}
+                  {participante.esAdmin}
                 </option>
               ))}
             </select>
