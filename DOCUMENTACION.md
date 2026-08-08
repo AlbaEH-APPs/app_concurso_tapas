@@ -15,7 +15,7 @@ Aplicación web (React) para gestionar el concurso familiar de tapas de Reyes: i
 | Frontend | React 19 (Create React App / `react-scripts`) |
 | Base de datos | Firestore (proyecto Firebase `concurso-tapas-familiar`) |
 | Imágenes | [ImgBB](https://imgbb.com) API (subida directa desde el navegador, sin backend propio) |
-| Hosting | GitHub Pages, vía `gh-pages` (`npm run deploy`) |
+| Hosting | GitHub Pages, vía GitHub Actions (deploy automático al hacer push a `master`, ver sección 8) |
 | Sesión | No hay autenticación real (sin Firebase Auth). El "login" es elegir un nombre de una lista y se guarda en `localStorage` |
 
 No hay backend propio: todo el código corre en el navegador y habla directamente con Firestore e ImgBB. Las claves en `src/config.js` son públicas (claves de cliente), no credenciales secretas.
@@ -180,7 +180,7 @@ Con esto, automáticamente:
 ### Pasos adicionales a revisar (no son código, pero conviene hacerlos)
 
 1. **Lista de participantes** (`GestionarParticipantes.js`, colección `configuracion/participantes`): es **global**, no se resetea entre ediciones. Si cambian los participantes de un año a otro (alguien nuevo, alguien que ya no viene), hay que actualizarla a mano desde esa pantalla antes de abrir la edición 2028.
-2. **Volver a desplegar**: tras el cambio, `npm run deploy` (build + publicación en GitHub Pages) para que el cambio de año se vea en producción.
+2. **Volver a desplegar**: no hace falta ningún paso manual — al hacer `git push` a `master`, el workflow de GitHub Actions compila y publica solo (ver sección 8).
 3. *(Opcional, no bloqueante)* Revisar `notas.txt`, que ya recoge mejoras pendientes (contraseña de admin, ventana de fechas para votar, etc.) por si se quieren abordar antes de 2028.
 
 ### Cosas que **no** haría falta cambiar
@@ -190,7 +190,131 @@ Con esto, automáticamente:
 
 ---
 
-## 7. Notas / comportamientos a tener en cuenta
+## 8. Despliegue en GitHub Pages vía GitHub Actions (guía replicable)
+
+Este proyecto empezó publicándose con el paquete `gh-pages` (opción de Pages **"Deploy from a branch"**): había que ejecutar `npm run deploy` a mano cada vez, que compilaba localmente y subía `build/` a una rama `gh-pages`. Se migró a la opción **"GitHub Actions"**: cada `git push` a `master` dispara un workflow que compila y publica solo, sin pasos manuales.
+
+Estos son los pasos seguidos, generalizados para poder repetirlos en cualquier otro proyecto de Create React App desplegado en GitHub Pages.
+
+### 8.1 Diferencia entre las dos opciones de Pages
+
+| | Deploy from a branch | GitHub Actions |
+|---|---|---|
+| Dónde se compila | En tu máquina (`npm run deploy`) | En un runner de GitHub, en cada push |
+| Riesgo de olvido | Sí — si no ejecutas el comando, el sitio queda desactualizado | No — se dispara solo |
+| Secretos/claves | Van en tu `.env`/`config.js` local, nunca pasan por GitHub | Se gestionan como **Secrets** del repo, inyectados solo durante el build |
+| Historial de despliegues | Solo el commit automático en la rama `gh-pages` | Pestaña **Actions**, con logs de cada build |
+
+### 8.2 Comprobaciones previas
+
+Antes de tocar nada, verificar que coinciden:
+- El remoto `origin` del repo local (`git remote -v`).
+- El campo `"homepage"` de `package.json` (de dónde CRA calcula las rutas de los assets).
+- La URL donde realmente vive el sitio publicado.
+
+Si no coinciden (por ejemplo, tras mover el repo a otra cuenta/organización), corregir el remoto (`git remote set-url origin <url-correcta>`) y el `homepage` **antes** de seguir.
+
+### 8.3 Crear el workflow
+
+Archivo `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]   # o "main", según el repo
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          CI: false   # evita que los warnings de ESLint rompan el build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+### 8.4 Cambiar el "Source" de Pages
+
+En el repo de GitHub: **Settings → Pages → Build and deployment → Source** → cambiar de "Deploy from a branch" a **"GitHub Actions"**. Sin este paso, el workflow compila pero no publica.
+
+### 8.5 Quitar el método antiguo
+
+En `package.json`:
+- Eliminar el script `predeploy` y `deploy` (`gh-pages -d build`).
+- Desinstalar la dependencia: `npm uninstall gh-pages`.
+
+La rama `gh-pages` remota puede borrarse una vez confirmado que el nuevo método funciona (no es obligatorio, solo limpieza).
+
+### 8.6 Claves/API keys: de archivo local a GitHub Secrets
+
+Si el proyecto tiene un archivo tipo `src/config.js` con claves (Firebase, APIs de terceros) excluido del repo por `.gitignore`, el build en Actions falla porque ese archivo no existe en el runner (`Module not found`). Con un repo **público**, la solución correcta no es commitear el archivo con las claves reales, sino:
+
+1. Reescribir el archivo de configuración para leer variables de entorno con prefijo `REACT_APP_` (obligatorio en CRA para que lleguen al bundle del navegador):
+   ```js
+   export const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
+   ```
+2. Quitar ese archivo del `.gitignore` y commitearlo (ya no contiene secretos, solo referencias a `process.env`).
+3. Crear un `.env.local` (gitignorado por defecto en CRA) con los valores reales, para que `npm start`/`npm run build` sigan funcionando en local.
+4. Crear un **Secret** por cada variable en **Settings → Secrets and variables → Actions → New repository secret**, con el mismo nombre (`REACT_APP_...`).
+5. Pasarlos al paso de build del workflow:
+   ```yaml
+   - run: npm run build
+     env:
+       CI: false
+       REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+       # ...una línea por cada secret
+   ```
+
+Nota: las claves de cliente de Firebase no son secretas en sentido estricto (viajan igualmente en el JS público del sitio); lo que sí conviene mantener fuera del historial de git son claves con capacidad de escritura/abuso (p. ej. una API key de subida de imágenes de terceros).
+
+### 8.7 Checklist para replicar en otro proyecto
+
+- [ ] Confirmar que `origin` y `homepage` apuntan al repo/URL reales.
+- [ ] Añadir `.github/workflows/deploy.yml` (plantilla de 8.3, ajustando la rama si no es `master`).
+- [ ] Cambiar Source de Pages a "GitHub Actions".
+- [ ] Quitar `gh-pages` de `package.json` y del proyecto.
+- [ ] Si hay claves/config con secretos: migrar a `process.env.REACT_APP_*` + `.env.local` local + Secrets en GitHub + inyectarlos en el paso de build.
+- [ ] Hacer push y comprobar la pestaña **Actions** hasta ver el deploy en verde.
+
+---
+
+## 9. Notas / comportamientos a tener en cuenta
 
 - **Sin autenticación real**: el "login" es solo elegir un nombre de una lista; cualquiera puede entrar como cualquier participante si conoce/ve la lista. Es aceptable para un uso familiar de confianza, pero no es seguridad real.
 - **`RegistroAccesos.js` no filtra por edición**: aunque cada acceso se guarda con su `edicion`, la pantalla de admin siempre muestra el histórico completo de todos los años mezclado.
