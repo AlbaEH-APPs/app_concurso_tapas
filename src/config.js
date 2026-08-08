@@ -1,0 +1,7 @@
+export const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
+export const AUTHDOMAIN = process.env.REACT_APP_FIREBASE_AUTH_DOMAIN;
+export const PROJECTID = process.env.REACT_APP_FIREBASE_PROJECT_ID;
+export const STORAGEBUCKET = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
+export const MESSAGINGSENDERID = process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID;
+export const APPID = process.env.REACT_APP_FIREBASE_APP_ID;
+export const IMGBB_API_KEY_original = process.env.REACT_APP_IMGBB_API_KEY;
