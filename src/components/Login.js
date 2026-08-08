@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { EDICION_ACTIVA, EDICIONES } from "../ediciones.js";
 import "../styles/Login.css";
 
 function Login({ onLogin }) {
@@ -63,7 +64,8 @@ function Login({ onLogin }) {
         esAdmin: participante.esAdmin,
         fechaAcceso: serverTimestamp(),
         navegador: navigator.userAgent,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        edicion: EDICION_ACTIVA
       });
 
       // Crear objeto de usuario
@@ -107,7 +109,7 @@ function Login({ onLogin }) {
       <div className="login-box">
         <div className="login-header">
           <h1>🍽️</h1>
-          <h2>Concurso de Tapas Reyes 2026</h2>
+          <h2>{EDICIONES[EDICION_ACTIVA].titulo}</h2>
           <p>Selecciona tu nombre para acceder</p>
         </div>
 

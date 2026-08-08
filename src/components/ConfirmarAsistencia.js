@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { collection, doc, setDoc, getDocs, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, deleteDoc, serverTimestamp, query, where } from "firebase/firestore";
 import { db } from "../firebase";
+import { EDICION_ACTIVA, EDICIONES } from "../ediciones.js";
 import "../styles/ConfirmarAsistencia.css";
+
+const idAsistencia = (nombre) => `${EDICION_ACTIVA}_${nombre}`;
 
 function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
   const [confirmados, setConfirmados] = useState([]);
@@ -16,7 +19,11 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
 
   const cargarAsistencias = async () => {
     try {
-      const snapshot = await getDocs(collection(db, "asistencias"));
+      const asistenciasQuery = query(
+        collection(db, "asistencias"),
+        where("edicion", "==", EDICION_ACTIVA)
+      );
+      const snapshot = await getDocs(asistenciasQuery);
       const asistenciasData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -40,14 +47,16 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
     setMensaje("");
 
     try {
-      // Crear documento con el nombre del usuario como ID
-      const docRef = doc(db, "asistencias", usuario.nombre);
-      
+      // Crear documento con ID compuesto edición+nombre, para no chocar
+      // con la confirmación del mismo nombre en otras ediciones
+      const docRef = doc(db, "asistencias", idAsistencia(usuario.nombre));
+
       await setDoc(docRef, {
         nombre: usuario.nombre,
         confirmado: true,
         fecha: serverTimestamp(),
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        edicion: EDICION_ACTIVA
       });
 
       setMensaje("✅ ¡Asistencia confirmada! Nos vemos en el concurso");
@@ -76,7 +85,7 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
     setMensaje("");
 
     try {
-      const docRef = doc(db, "asistencias", usuario.nombre);
+      const docRef = doc(db, "asistencias", idAsistencia(usuario.nombre));
       await deleteDoc(docRef);
 
       setMensaje("ℹ️ Asistencia cancelada");
@@ -119,14 +128,15 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
     return <div className="cargando">Cargando asistencias...</div>;
   }
 
+  const edicion = EDICIONES[EDICION_ACTIVA];
   const totalConfirmados = confirmados.length;
-  const porcentaje = confirmados.length > 0 ? Math.round((confirmados.length / 20) * 100) : 0; // Ajusta 20 al número esperado de participantes
+  const porcentaje = confirmados.length > 0 ? Math.round((confirmados.length / edicion.aforoEsperado) * 100) : 0;
 
   return (
     <div className="confirmar-asistencia">
       <div className="header-asistencia">
         <h2>📅 Confirmar Asistencia</h2>
-        <p className="subtitulo">Confirma tu asistencia al Concurso de Tapas Reyes 2026</p>
+        <p className="subtitulo">Confirma tu asistencia al {edicion.titulo}</p>
       </div>
 
       {mensaje && (
@@ -222,9 +232,9 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
       <div className="info-evento">
         <h4>📍 Detalles del evento</h4>
         <div className="detalles">
-          <p><strong>📅 Fecha:</strong> 5 de Enero de 2026 (Noche de Reyes)</p>
-          <p><strong>🕐 Hora:</strong> A partir de las 18</p>
-          <p><strong>📍 Lugar:</strong> Calle Palencia 13 2º B</p>
+          <p><strong>📅 Fecha:</strong> {edicion.fechaEvento}</p>
+          <p><strong>🕐 Hora:</strong> {edicion.horaEvento}</p>
+          <p><strong>📍 Lugar:</strong> {edicion.lugarEvento}</p>
         </div>
         <p className="nota-info">
           ℹ️ La confirmación de asistencia es importante para organizar mejor el evento

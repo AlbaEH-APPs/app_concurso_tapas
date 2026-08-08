@@ -7,7 +7,7 @@ import "../styles/TapaCard.css";
 
 const IMGBB_API_KEY = IMGBB_API_KEY_original;
 
-const TapaCard = ({ tapa, posicion }) => {
+const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
   const [media, setMedia] = useState(0);
   const [numVotos, setNumVotos] = useState(0);
   const [file, setFile] = useState(null);
@@ -148,7 +148,7 @@ const TapaCard = ({ tapa, posicion }) => {
           </div>
         </div>
 
-        {!tapa.fotoURL && (
+        {!tapa.fotoURL && !soloLectura && (
           <div className="tapa-upload-section">
             {!preview ? (
               <label htmlFor={`fileInput-${tapa.id}`} className="upload-label">
@@ -191,7 +191,7 @@ const TapaCard = ({ tapa, posicion }) => {
           </div>
         )}
 
-        <VotarTapa tapaId={tapa.id} />
+        {!soloLectura && <VotarTapa tapaId={tapa.id} />}
       </div>
     </div>
   );

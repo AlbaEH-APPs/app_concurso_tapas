@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, onSnapshot, query, where, getDocs } from "firebase/firestore";
 import TapaCard from "./TapaCard";
+import { EDICION_ACTIVA } from "../ediciones.js";
 import "../styles/TapaList.css";
 
-const TapaList = () => {
+const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
   const [tapas, setTapas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const tapasCol = collection(db, "tapas");
+    const tapasCol = query(collection(db, "tapas"), where("edicion", "==", edicion));
     const unsubscribe = onSnapshot(tapasCol, async (snapshot) => {
       try {
         const tapasPromises = snapshot.docs.map(async (doc) => {
           const tapaId = doc.id;
-          
+
           const votosQuery = query(collection(db, "votos"), where("tapaId", "==", tapaId));
           const votosSnapshot = await getDocs(votosQuery);
           
@@ -42,7 +43,7 @@ const TapaList = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [edicion]);
 
   const totalVotos = tapas.reduce((acc, tapa) => acc + (tapa.numVotos || 0), 0);
   const mediaGeneral = tapas.length > 0 
@@ -110,10 +111,11 @@ const TapaList = () => {
 
       <div className="tapa-list">
         {tapas.map((tapa, index) => (
-          <TapaCard 
-            key={tapa.id} 
-            tapa={tapa} 
+          <TapaCard
+            key={tapa.id}
+            tapa={tapa}
             posicion={index + 1}
+            soloLectura={soloLectura}
           />
         ))}
       </div>

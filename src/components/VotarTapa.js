@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { EDICION_ACTIVA } from "../ediciones.js";
 import "../styles/VotarTapa.css";
 
 const VotarTapa = ({ tapaId }) => {
@@ -97,6 +98,7 @@ const VotarTapa = ({ tapaId }) => {
         deviceId,
         puntuacion,
         fecha: new Date().toISOString(),
+        edicion: EDICION_ACTIVA,
       });
 
       setYaVotado(true);

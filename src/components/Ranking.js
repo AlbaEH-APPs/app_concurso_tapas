@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { EDICION_ACTIVA } from "../ediciones.js";
 import "../styles/Ranking.css";
 
 // Función para renderizar estrellas según la media
@@ -18,12 +19,12 @@ const renderStars = (media) => {
   return stars;
 };
 
-const Ranking = () => {
+const Ranking = ({ edicion = EDICION_ACTIVA }) => {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const tapasCol = collection(db, "tapas");
+    const tapasCol = query(collection(db, "tapas"), where("edicion", "==", edicion));
     const unsubscribeTapas = onSnapshot(tapasCol, async (tapasSnapshot) => {
       const tapasData = [];
 
@@ -56,7 +57,7 @@ const Ranking = () => {
     });
 
     return () => unsubscribeTapas();
-  }, []);
+  }, [edicion]);
 
   // Medallas para el podio
   const medallas = ["🥇", "🥈", "🥉"];

@@ -1,0 +1,49 @@
+.archivo-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.archivo-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.archivo-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.archivo-select {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 20px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.archivo-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.archivo-tabs button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.archivo-tabs button.activo {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}

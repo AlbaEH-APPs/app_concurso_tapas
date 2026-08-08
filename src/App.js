@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 import TapaList from "./components/TapaList";
 import SubirFoto from "./components/SubirFoto";
@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import RegistroAccesos from "./components/RegistroAccesos";
 import GestionarParticipantes from "./components/GestionarParticipantes";
 import ConfirmarAsistencia from "./components/ConfirmarAsistencia";
+import Archivo from "./components/Archivo";
+import { EDICION_ACTIVA, EDICIONES, EDICIONES_ARCHIVADAS } from "./ediciones.js";
 import "./App.css";
 
 function App() {
@@ -69,7 +71,11 @@ function App() {
 
   const cargarEstadisticasAsistencia = async () => {
     try {
-      const snapshot = await getDocs(collection(db, "asistencias"));
+      const asistenciasQuery = query(
+        collection(db, "asistencias"),
+        where("edicion", "==", EDICION_ACTIVA)
+      );
+      const snapshot = await getDocs(asistenciasQuery);
       const confirmados = snapshot.docs.map(doc => doc.data());
       
       setEstadisticasAsistencia({
@@ -134,7 +140,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Concurso de Tapas Reyes 2026 🍽️</h1>
+        <h1>{EDICIONES[EDICION_ACTIVA].titulo} 🍽️</h1>
         <div className="usuario-info">
           <span>👤 {usuario.nombre}</span>
           <button className="btn-logout" onClick={handleLogout}>
@@ -153,7 +159,7 @@ function App() {
               <div className="banner-asistencia urgente" onClick={() => cambiarSeccion("asistencia")}>
                 <div className="banner-icono">⚠️</div>
                 <div className="banner-contenido">
-                  <h3>¡Confirma tu asistencia! El plazo limite es hasta el 02/01/2026 </h3>
+                  <h3>¡Confirma tu asistencia! El plazo limite es hasta el {EDICIONES[EDICION_ACTIVA].plazoConfirmacion} </h3>
                   <p>Es importante saber cuántos vendrán para organizar el evento</p>
                   <div className="banner-stats">
                     <span className="stat-item">
@@ -201,6 +207,12 @@ function App() {
                 <h3>Votaciones / Ranking</h3>
                 <p>Consulta los votos y la clasificación de los participantes.</p>
               </div>
+              {EDICIONES_ARCHIVADAS.length > 0 && (
+                <div className="tarjeta" onClick={() => cambiarSeccion("archivo")}>
+                  <h3>📂 Ediciones Anteriores</h3>
+                  <p>Consulta las tapas y el ranking final de ediciones pasadas.</p>
+                </div>
+              )}
               {/* Tarjetas solo visibles para admin */}
               {usuario.esAdmin && (
                 <>
@@ -228,6 +240,7 @@ function App() {
             {seccion === "inscripciones" && <SubirFoto usuario={usuario} />}
             {seccion === "tapas" && <TapaList />}
             {seccion === "ranking" && <Ranking />}
+            {seccion === "archivo" && <Archivo />}
             {seccion === "accesos" && usuario.esAdmin && <RegistroAccesos />}
             {seccion === "participantes" && usuario.esAdmin && <GestionarParticipantes />}
           </div>
@@ -235,7 +248,7 @@ function App() {
       </main>
 
       <footer className="footer">
-        <p className="footer-text">© 2026 Aplicación para el concurso de tapas</p>
+        <p className="footer-text">© {EDICION_ACTIVA} Aplicación para el concurso de tapas</p>
         <p className="footer-subtext">Desarrollado por Alba Erdociain Herrero</p>
       </footer>
     </div>

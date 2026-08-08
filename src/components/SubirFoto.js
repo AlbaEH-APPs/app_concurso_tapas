@@ -2,7 +2,8 @@ import { useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { IMGBB_API_KEY_original } from "../config.js";
-import "../styles/SubirFoto.css"; 
+import { EDICION_ACTIVA } from "../ediciones.js";
+import "../styles/SubirFoto.css";
 
 const IMGBB_API_KEY = IMGBB_API_KEY_original;
 
@@ -95,6 +96,7 @@ const SubirFoto = () => {
         descripcion: descripcion.trim(),
         fotoURL,
         createdAt: Timestamp.now(),
+        edicion: EDICION_ACTIVA,
       });
 
       // Mostrar mensaje de éxito
