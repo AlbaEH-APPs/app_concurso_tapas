@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { EDICION_ACTIVA, EDICIONES } from "../ediciones.js";
+import { IconoCorona, IconoAlerta } from "./Iconos";
 import "../styles/Login.css";
 
 function Login({ onLogin }) {
@@ -95,9 +96,12 @@ function Login({ onLogin }) {
     return (
       <div className="login-container">
         <div className="login-box">
-          <div className="cargando-login">
-            <div className="spinner"></div>
-            <p>Cargando participantes...</p>
+          <div className="cargando-login" role="status" aria-label="Cargando participantes">
+            <div className="sk sk-papel" style={{ width: 52, height: 52, borderRadius: 14 }}></div>
+            <div className="sk sk-papel sk-titulo" style={{ width: "80%" }}></div>
+            <div className="sk sk-papel sk-sub"></div>
+            <div className="sk sk-papel" style={{ height: 48, marginTop: 18 }}></div>
+            <div className="sk sk-papel" style={{ height: 48 }}></div>
           </div>
         </div>
       </div>
@@ -108,7 +112,7 @@ function Login({ onLogin }) {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1>🍽️</h1>
+          <div className="login-marca"><IconoCorona size={26} /></div>
           <h2>{EDICIONES[EDICION_ACTIVA].titulo}</h2>
           <p>Selecciona tu nombre para acceder</p>
         </div>
@@ -123,7 +127,7 @@ function Login({ onLogin }) {
               disabled={cargando}
               className="select-usuario"
             >
-              <option value="">-- Selecciona tu nombre --</option>
+              <option value="">— Selecciona tu nombre —</option>
               {participantes.map((participante, index) => (
                 <option key={index} value={participante.nombre}>
                   {participante.nombre}
@@ -134,7 +138,12 @@ function Login({ onLogin }) {
             </select>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="error-message" role="alert">
+              <IconoAlerta size={18} />
+              <span>{error}</span>
+            </div>
+          )}
 
           <button 
             type="submit" 
@@ -147,7 +156,7 @@ function Login({ onLogin }) {
 
         <div className="login-footer">
           <p>
-            👥 {participantes.length} participantes registrados
+            <strong>{participantes.length}</strong> participantes registrados
           </p>
           <p className="login-note">
             ¿No apareces en la lista? Contacta con el administrador

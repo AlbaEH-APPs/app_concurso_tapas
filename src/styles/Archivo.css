@@ -1,49 +1,92 @@
+/* ====================== ARCHIVO DE EDICIONES ====================== */
 .archivo-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 100%;
 }
 
 .archivo-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.archivo-header h2 {
-  color: #333;
-  font-size: 28px;
-  margin-bottom: 8px;
+  margin-bottom: 22px;
 }
 
 .archivo-select {
-  display: block;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto 20px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 280px;
+  margin-bottom: 12px;
+  vertical-align: top;
+  max-width: 100%;
+  padding: 11px 40px 11px 14px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23dcc28a' stroke-width='2.2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: border-color var(--t);
 }
 
+.archivo-select:hover {
+  border-color: var(--gold);
+}
+
+.archivo-select option {
+  color: var(--ink);
+  background: var(--cream);
+}
+
+/* Pestañas segmentadas */
 .archivo-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 24px;
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 0 28px 12px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  vertical-align: top;
 }
 
 .archivo-tabs button {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  background: #fff;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 9px;
   cursor: pointer;
-  font-weight: 600;
+  transition: background var(--t), color var(--t);
+}
+
+.archivo-tabs button:hover {
+  color: var(--text);
 }
 
 .archivo-tabs button.activo {
-  background: #333;
-  color: #fff;
-  border-color: #333;
+  color: var(--gold-ink);
+  background: var(--gold);
+}
+
+.archivo-vacio {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-lg);
+}
+
+@media (max-width: 640px) {
+  .archivo-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .archivo-tabs {
+    display: flex;
+    margin-left: 0;
+  }
+
+  .archivo-tabs button {
+    flex: 1;
+  }
 }

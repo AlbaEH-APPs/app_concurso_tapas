@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {doc, setDoc, getDoc} from "firebase/firestore";
 import { db } from "../firebase";
+import { Aviso, limpiarMensaje, tipoMensaje, IconoPapelera } from "./Iconos";
 import "../styles/GestionarParticipantes.css";
 
 function GestionarParticipantes() {
@@ -112,25 +113,38 @@ function GestionarParticipantes() {
   };
 
   if (cargando) {
-    return <div className="cargando">Cargando participantes...</div>;
+    return (
+      <div className="gestionar-participantes" role="status" aria-label="Cargando participantes">
+        <div className="sk-cabecera">
+          <div className="sk sk-titulo"></div>
+        </div>
+        <div className="sk-filas">
+          <div className="sk sk-fila" style={{ height: 88 }}></div>
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="gestionar-participantes">
-      <h2>👥 Gestionar Participantes</h2>
+      <h2>Gestionar participantes</h2>
       
       {mensaje && (
-        <div className={`mensaje ${mensaje.includes("✅") ? "exito" : "error"}`}>
-          {mensaje}
+        <div className="mensaje">
+          <Aviso tipo={tipoMensaje(mensaje) === "info" ? "error" : tipoMensaje(mensaje)}>{limpiarMensaje(mensaje)}</Aviso>
         </div>
       )}
 
       <div className="agregar-participante">
-        <h3>➕ Añadir nuevo participante</h3>
+        <h3>Añadir nuevo participante</h3>
         <div className="form-agregar">
           <input
             type="text"
             placeholder="Nombre completo"
+            aria-label="Nombre completo"
             value={nuevoNombre}
             onChange={(e) => setNuevoNombre(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && agregarParticipante()}
@@ -156,7 +170,7 @@ function GestionarParticipantes() {
       </div>
 
       <div className="lista-participantes">
-        <h3>📋 Lista actual ({participantes.length} participantes)</h3>
+        <h3>Lista actual <span className="contador">{participantes.length}</span></h3>
         
         {participantes.length === 0 ? (
           <p className="sin-participantes">
@@ -171,7 +185,7 @@ function GestionarParticipantes() {
                     {participante.nombre}
                   </span>
                   {participante.esAdmin && (
-                    <span className="badge-admin">👑 Admin</span>
+                    <span className="badge-admin">Admin</span>
 
                   )}
                 </div>
@@ -182,14 +196,16 @@ function GestionarParticipantes() {
                     className="btn-admin"
                     title={participante.esAdmin ? "Quitar admin" : "Hacer admin"}
                   >
-                    {participante.esAdmin ? "Quitar 👑" : "Hacer 👑"}
+                    {participante.esAdmin ? "Quitar admin" : "Hacer admin"}
                   </button>
                   <button
                     onClick={() => eliminarParticipante(index)}
                     disabled={guardando}
                     className="btn-eliminar"
+                    aria-label={`Eliminar a ${participante.nombre}`}
+                    title="Eliminar"
                   >
-                    🗑️
+                    <IconoPapelera />
                   </button>
                 </div>
               </div>
@@ -199,7 +215,7 @@ function GestionarParticipantes() {
       </div>
 
       <div className="info-importante">
-        <h4>ℹ️ Información importante</h4>
+        <h4>Información importante</h4>
         <ul>
           <li>Los participantes verán esta lista al iniciar sesión</li>
           <li>Los administradores pueden ver el registro de accesos</li>

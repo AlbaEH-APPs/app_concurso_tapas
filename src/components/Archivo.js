@@ -13,7 +13,7 @@ function Archivo() {
   if (!edicionSeleccionada) {
     return (
       <div className="archivo-container">
-        <p>Todavía no hay ediciones archivadas.</p>
+        <p className="archivo-vacio">Todavía no hay ediciones archivadas.</p>
       </div>
     );
   }
@@ -21,11 +21,13 @@ function Archivo() {
   return (
     <div className="archivo-container">
       <div className="archivo-header">
-        <h2>📂 Archivo de ediciones</h2>
+        <h2>Archivo de ediciones</h2>
         <p>Consulta, en modo solo lectura, las tapas y el ranking final de ediciones anteriores.</p>
       </div>
 
+      <label className="visually-hidden" htmlFor="archivo-edicion">Edición</label>
       <select
+        id="archivo-edicion"
         className="archivo-select"
         value={edicionSeleccionada}
         onChange={(e) => setEdicionSeleccionada(e.target.value)}
@@ -37,15 +39,17 @@ function Archivo() {
         ))}
       </select>
 
-      <div className="archivo-tabs">
+      <div className="archivo-tabs" role="group" aria-label="Vista">
         <button
           className={vista === "tapas" ? "activo" : ""}
+          aria-pressed={vista === "tapas"}
           onClick={() => setVista("tapas")}
         >
           Tapas
         </button>
         <button
           className={vista === "ranking" ? "activo" : ""}
+          aria-pressed={vista === "ranking"}
           onClick={() => setVista("ranking")}
         >
           Ranking

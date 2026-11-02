@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, doc, setDoc, getDocs, deleteDoc, serverTimestamp, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { EDICION_ACTIVA, EDICIONES } from "../ediciones.js";
+import { Aviso, limpiarMensaje, tipoMensaje, IconoCalendario, IconoCheck, IconoReloj, IconoUbicacion } from "./Iconos";
 import "../styles/ConfirmarAsistencia.css";
 
 const idAsistencia = (nombre) => `${EDICION_ACTIVA}_${nombre}`;
@@ -125,7 +126,20 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
   };
 
   if (cargando) {
-    return <div className="cargando">Cargando asistencias...</div>;
+    return (
+      <div className="confirmar-asistencia" role="status" aria-label="Cargando asistencias">
+        <div className="sk-cabecera">
+          <div className="sk sk-titulo"></div>
+          <div className="sk sk-sub"></div>
+        </div>
+        <div className="sk" style={{ height: 210, borderRadius: 20, marginBottom: 20 }}></div>
+        <div className="sk-filas">
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
+        </div>
+      </div>
+    );
   }
 
   const edicion = EDICIONES[EDICION_ACTIVA];
@@ -135,13 +149,13 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
   return (
     <div className="confirmar-asistencia">
       <div className="header-asistencia">
-        <h2>📅 Confirmar Asistencia</h2>
+        <h2>Confirmar asistencia</h2>
         <p className="subtitulo">Confirma tu asistencia al {edicion.titulo}</p>
       </div>
 
       {mensaje && (
-        <div className={`mensaje-asistencia ${mensaje.includes("✅") ? "exito" : mensaje.includes("❌") ? "error" : "info"}`}>
-          {mensaje}
+        <div className="mensaje-asistencia">
+          <Aviso tipo={tipoMensaje(mensaje)}>{limpiarMensaje(mensaje)}</Aviso>
         </div>
       )}
 
@@ -149,7 +163,7 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
       <div className="mi-confirmacion">
         {!miEstado ? (
           <div className="confirmacion-pendiente">
-            <div className="icono-grande">🤔</div>
+            <div className="icono-grande"><IconoCalendario size={28} /></div>
             <h3>¿Vas a venir?</h3>
             <p>Confirma tu asistencia para que sepamos cuántos seremos</p>
             <button 
@@ -157,12 +171,12 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
               onClick={confirmarAsistencia}
               disabled={procesando}
             >
-              {procesando ? "Confirmando..." : "✓ Sí, voy a asistir"}
+              {procesando ? "Confirmando..." : "Sí, voy a asistir"}
             </button>
           </div>
         ) : (
           <div className="confirmacion-ok">
-            <div className="icono-grande">✅</div>
+            <div className="icono-grande"><IconoCheck size={28} /></div>
             <h3>¡Ya has confirmado!</h3>
             <p>Confirmaste tu asistencia el {formatearFecha(miEstado.fecha || miEstado.timestamp)}</p>
             <button 
@@ -170,7 +184,7 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
               onClick={cancelarAsistencia}
               disabled={procesando}
             >
-              {procesando ? "Cancelando..." : "✗ Cancelar asistencia"}
+              {procesando ? "Cancelando..." : "Cancelar asistencia"}
             </button>
           </div>
         )}
@@ -194,11 +208,11 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
 
       {/* Lista de confirmados */}
       <div className="lista-confirmados">
-        <h3>👥 Personas que asistirán ({totalConfirmados})</h3>
+        <h3>Personas que asistirán <span className="contador">{totalConfirmados}</span></h3>
         
         {confirmados.length === 0 ? (
           <div className="sin-confirmados">
-            <p>🏜️ Aún no hay nadie confirmado</p>
+            <p>Aún no hay nadie confirmado</p>
             <p className="texto-secundario">¡Sé el primero en confirmar!</p>
           </div>
         ) : (
@@ -220,7 +234,7 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
                     </div>
                   </div>
                   {index === 0 && (
-                    <div className="badge-primero">🥇 Primero</div>
+                    <div className="badge-primero">Primero</div>
                   )}
                 </div>
               ))}
@@ -230,14 +244,14 @@ function ConfirmarAsistencia({ usuario, onActualizarEstadisticas }) {
 
       {/* Información adicional */}
       <div className="info-evento">
-        <h4>📍 Detalles del evento</h4>
+        <h4>Detalles del evento</h4>
         <div className="detalles">
-          <p><strong>📅 Fecha:</strong> {edicion.fechaEvento}</p>
-          <p><strong>🕐 Hora:</strong> {edicion.horaEvento}</p>
-          <p><strong>📍 Lugar:</strong> {edicion.lugarEvento}</p>
+          <p><IconoCalendario size={18} /><strong>Fecha:</strong> {edicion.fechaEvento}</p>
+          <p><IconoReloj size={18} /><strong>Hora:</strong> {edicion.horaEvento}</p>
+          <p><IconoUbicacion size={18} /><strong>Lugar:</strong> {edicion.lugarEvento}</p>
         </div>
         <p className="nota-info">
-          ℹ️ La confirmación de asistencia es importante para organizar mejor el evento
+          La confirmación de asistencia es importante para organizar mejor el evento
         </p>
       </div>
     </div>

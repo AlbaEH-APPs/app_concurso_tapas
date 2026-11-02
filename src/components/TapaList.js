@@ -3,6 +3,7 @@ import { db } from "../firebase";
 import { collection, onSnapshot, query, where, getDocs } from "firebase/firestore";
 import TapaCard from "./TapaCard";
 import { EDICION_ACTIVA } from "../ediciones.js";
+import { IconoPlato, IconoTrofeo } from "./Iconos";
 import "../styles/TapaList.css";
 
 const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
@@ -53,10 +54,23 @@ const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
   if (loading) {
     return (
       <div className="tapas-container">
-        <div className="tapas-loading">
-          <div className="loading-spinner"></div>
-          <h3 className="loading-title">Cargando tapas deliciosas...</h3>
-          <p className="loading-subtitle">Preparando el concurso gastronómico</p>
+        <div className="tapas-loading" role="status" aria-label="Cargando tapas">
+          <div className="sk-cabecera">
+            <div className="sk sk-titulo"></div>
+            <div className="sk sk-sub"></div>
+          </div>
+          <div className="sk-tarjetas">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="sk-tarjeta">
+                <div className="sk sk-img"></div>
+                <div className="sk-cuerpo">
+                  <div className="sk sk-linea" style={{ width: "70%", height: 18 }}></div>
+                  <div className="sk sk-linea" style={{ width: "90%" }}></div>
+                  <div className="sk sk-linea" style={{ width: "45%" }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -66,7 +80,7 @@ const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
     return (
       <div className="tapas-container">
         <div className="tapas-vacio">
-          <div className="tapas-vacio-icono">🍽️</div>
+          <div className="tapas-vacio-icono"><IconoPlato size={30} /></div>
           <h3 className="tapas-vacio-titulo">Todavía no hay tapas en el concurso</h3>
           <p className="tapas-vacio-texto">Sé el primero en participar y comparte tu mejor creación culinaria</p>
         </div>
@@ -78,13 +92,13 @@ const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
     <div className="tapas-container">
       <div className="tapas-header">
         <div className="tapas-header-content">
-          <h2 className="tapas-titulo">Tapas Concursantes</h2>
+          <h2 className="tapas-titulo">Tapas concursantes</h2>
           <p className="tapas-subtitulo">Descubre y vota por las mejores creaciones culinarias de nuestros participantes</p>
         </div>
         
         <div className="tapas-stats">
           <div className="stat-card">
-            <div className="stat-icon">🏆</div>
+            <div className="stat-icon"><IconoPlato size={20} /></div>
             <div className="stat-content">
               <span className="stat-label">Total de tapas</span>
               <span className="stat-value">{tapas.length}</span>
@@ -92,7 +106,7 @@ const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
           </div>
           
           <div className="stat-card">
-            <div className="stat-icon">⭐</div>
+            <div className="stat-icon"><span aria-hidden="true">★</span></div>
             <div className="stat-content">
               <span className="stat-label">Votos totales</span>
               <span className="stat-value">{totalVotos}</span>
@@ -100,7 +114,7 @@ const TapaList = ({ edicion = EDICION_ACTIVA, soloLectura = false }) => {
           </div>
           
           <div className="stat-card">
-            <div className="stat-icon">📊</div>
+            <div className="stat-icon"><IconoTrofeo size={20} /></div>
             <div className="stat-content">
               <span className="stat-label">Media general</span>
               <span className="stat-value">{mediaGeneral}</span>

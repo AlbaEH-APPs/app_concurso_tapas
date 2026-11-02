@@ -3,6 +3,7 @@ import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { IMGBB_API_KEY_original } from "../config.js";
 import { EDICION_ACTIVA } from "../ediciones.js";
+import { Aviso, IconoCamara, IconoX } from "./Iconos";
 import "../styles/SubirFoto.css";
 
 const IMGBB_API_KEY = IMGBB_API_KEY_original;
@@ -14,20 +15,23 @@ const SubirFoto = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorForm, setErrorForm] = useState(""); // aviso en pantalla (antes: alert)
+  const [errorFoto, setErrorFoto] = useState("");
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    
+    setErrorFoto("");
+
     if (selectedFile) {
       // Validar tamaño (max 5MB)
       if (selectedFile.size > 5 * 1024 * 1024) {
-        alert("La imagen es demasiado grande. Máximo 5MB.");
+        setErrorFoto("La imagen es demasiado grande. Máximo 5MB.");
         return;
       }
 
       // Validar tipo
       if (!selectedFile.type.startsWith('image/')) {
-        alert("Por favor, selecciona un archivo de imagen válido.");
+        setErrorFoto("Por favor, selecciona un archivo de imagen válido.");
         return;
       }
 
@@ -48,8 +52,9 @@ const SubirFoto = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorForm("");
     if (!nombre.trim()) {
-      alert("El nombre de la tapa es obligatorio");
+      setErrorForm("El nombre de la tapa es obligatorio");
       return;
     }
 
@@ -115,7 +120,7 @@ const SubirFoto = () => {
 
     } catch (error) {
       console.error("Error subiendo la tapa:", error);
-      alert("Error subiendo la tapa. Por favor, intenta de nuevo.");
+      setErrorForm("Error subiendo la tapa. Por favor, inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -125,14 +130,13 @@ const SubirFoto = () => {
     <div className="subir-foto-container">
       {showSuccess && (
         <div className="success-message">
-          <span className="success-icon">✓</span>
-          ¡Tapa inscrita con éxito!
+          <Aviso tipo="exito">Tapa inscrita con éxito</Aviso>
         </div>
       )}
 
       <form className="subir-form" onSubmit={handleSubmit}>
-        <div>
-          <h2>Inscripción de Tapa</h2>
+        <div className="subir-form-cabecera">
+          <h2>Inscripción de tapa</h2>
           <p className="subir-form-subtitle">
             Completa el formulario para participar en el concurso
           </p>
@@ -149,13 +153,11 @@ const SubirFoto = () => {
             placeholder="Ej: Croquetas de jamón ibérico"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
+            aria-invalid={errorForm === "El nombre de la tapa es obligatorio"}
             required
             maxLength={100}
           />
-          <p className="form-hint">
-            <span className="form-hint-icon">ℹ️</span>
-            El nombre puede ser creativo y atractivo
-          </p>
+          <p className="form-hint">El nombre puede ser creativo y atractivo</p>
         </div>
 
         {/* Campo Descripción */}
@@ -170,10 +172,7 @@ const SubirFoto = () => {
             onChange={(e) => setDescripcion(e.target.value)}
             maxLength={500}
           />
-          <p className="form-hint">
-            <span className="form-hint-icon">ℹ️</span>
-            Incluye ingredientes  
-          </p>
+          <p className="form-hint">Incluye los ingredientes</p>
         </div>
 
         {/* Upload de Foto */}
@@ -184,7 +183,7 @@ const SubirFoto = () => {
           
           {!preview ? (
             <div className={`file-upload-area ${file ? 'has-file' : ''}`}>
-              <div className="upload-icon">📸</div>
+              <div className="upload-icon"><IconoCamara size={24} /></div>
               <label className="upload-label" htmlFor="fileInput">
                 {file ? "✓ Foto seleccionada" : "Sube tu foto"}
               </label>
@@ -202,7 +201,7 @@ const SubirFoto = () => {
             <div className="form-group">
               <div className="preview-label">
                 <span>Vista previa</span>
-                <span className="preview-badge">✓ Listo</span>
+                <span className="preview-badge">Listo</span>
               </div>
               <div className="image-preview">
                 <img src={preview} alt="Vista previa de la tapa" />
@@ -212,12 +211,19 @@ const SubirFoto = () => {
                   onClick={removeImage}
                   aria-label="Eliminar imagen"
                 >
-                  ✕
+                  <IconoX />
                 </button>
               </div>
             </div>
           )}
         </div>
+
+        {(errorForm || errorFoto) && (
+          <div className="subir-avisos">
+            {errorForm && <Aviso tipo="error">{errorForm}</Aviso>}
+            {errorFoto && <Aviso tipo="error">{errorFoto}</Aviso>}
+          </div>
+        )}
 
         {/* Botón Submit */}
         <div className="submit-btn-container">
@@ -228,7 +234,7 @@ const SubirFoto = () => {
                 Subiendo...
               </span>
             ) : (
-              "✓ Confirmar inscripción"
+              "Confirmar inscripción"
             )}
           </button>
         </div>

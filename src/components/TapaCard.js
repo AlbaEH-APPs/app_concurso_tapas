@@ -3,6 +3,7 @@ import { db } from "../firebase";
 import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import VotarTapa from "./VotarTapa";
 import { IMGBB_API_KEY_original } from "../config.js";
+import { Aviso, IconoCamara, IconoPlato } from "./Iconos";
 import "../styles/TapaCard.css";
 
 const IMGBB_API_KEY = IMGBB_API_KEY_original;
@@ -13,6 +14,7 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [errorFoto, setErrorFoto] = useState("");
 
   useEffect(() => {
     const votosQuery = query(collection(db, "votos"), where("tapaId", "==", tapa.id));
@@ -42,7 +44,8 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
   };
 
   const handleUpload = async () => {
-    if (!file) return alert("Selecciona una foto primero");
+    if (!file) return setErrorFoto("Selecciona una foto primero");
+    setErrorFoto("");
 
     setUploading(true);
     try {
@@ -79,7 +82,7 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
       setPreview(null);
     } catch (err) {
       console.error(err);
-      alert("Error subiendo la imagen");
+      setErrorFoto("Error subiendo la imagen. Inténtalo de nuevo.");
     } finally {
       setUploading(false);
     }
@@ -110,9 +113,9 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
   };
 
   const getBadgeEmoji = () => {
-    if (posicion === 1) return "🥇";
-    if (posicion === 2) return "🥈";
-    if (posicion === 3) return "🥉";
+    if (posicion === 1) return "1º";
+    if (posicion === 2) return "2º";
+    if (posicion === 3) return "3º";
     return null;
   };
 
@@ -122,13 +125,13 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
         {tapa.fotoURL ? (
           <img src={tapa.fotoURL} alt={tapa.nombre} loading="lazy" />
         ) : (
-          <div className="tapa-sin-imagen">🍽️</div>
+          <div className="tapa-sin-imagen"><IconoPlato size={40} /></div>
         )}
         
         {posicion <= 3 && (
           <div className={getBadgeClass()}>
             <span>{getBadgeEmoji()}</span>
-            <span>Posición {posicion}</span>
+            <span className="visually-hidden">Posición {posicion}</span>
           </div>
         )}
       </div>
@@ -152,7 +155,7 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
           <div className="tapa-upload-section">
             {!preview ? (
               <label htmlFor={`fileInput-${tapa.id}`} className="upload-label">
-                <span className="upload-icon">📸</span>
+                <span className="upload-icon"><IconoCamara size={20} /></span>
                 <span>Subir foto de la tapa</span>
               </label>
             ) : (
@@ -167,12 +170,11 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
                 >
                   {uploading ? (
                     <>
-                      <span className="spinner">⏳</span>
+                      <span className="spinner" aria-hidden="true"></span>
                       <span>Subiendo...</span>
                     </>
                   ) : (
                     <>
-                      <span>✓</span>
                       <span>Confirmar foto</span>
                     </>
                   )}
@@ -190,6 +192,8 @@ const TapaCard = ({ tapa, posicion, soloLectura = false }) => {
             />
           </div>
         )}
+
+        {errorFoto && <Aviso tipo="error">{errorFoto}</Aviso>}
 
         {!soloLectura && <VotarTapa tapaId={tapa.id} />}
       </div>

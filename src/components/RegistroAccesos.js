@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import { IconoRefrescar } from "./Iconos";
 import "../styles/RegistroAccesos.css";
 
 function RegistroAccesos() {
@@ -64,12 +65,24 @@ function RegistroAccesos() {
   const ultimoAcceso = accesos[0];
 
   if (cargando) {
-    return <div className="cargando">Cargando accesos...</div>;
+    return (
+      <div className="registro-accesos" role="status" aria-label="Cargando accesos">
+        <div className="sk-cabecera">
+          <div className="sk sk-titulo"></div>
+        </div>
+        <div className="sk-filas">
+          <div className="sk sk-fila" style={{ height: 88 }}></div>
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="registro-accesos">
-      <h2>📊 Registro de Accesos</h2>
+      <h2>Registro de accesos</h2>
       
       <div className="estadisticas">
         <div className="stat-card">
@@ -91,13 +104,14 @@ function RegistroAccesos() {
       <div className="filtro-container">
         <input
           type="text"
-          placeholder="Buscar por nombre..."
+          aria-label="Buscar por nombre"
+          placeholder="Buscar por nombre…"
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
           className="filtro-input"
         />
         <button onClick={cargarAccesos} className="btn-refrescar">
-          🔄 Refrescar
+          <IconoRefrescar /> Refrescar
         </button>
       </div>
 
@@ -106,7 +120,7 @@ function RegistroAccesos() {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Fecha y Hora</th>
+              <th>Fecha y hora</th>
               <th>Navegador</th>
             </tr>
           </thead>
@@ -126,10 +140,10 @@ function RegistroAccesos() {
                   <td>{formatearFecha(acceso.timestamp || acceso.fechaAcceso)}</td>
                   <td className="navegador-celda">
                     {acceso.navegador ? (
-                      acceso.navegador.includes("Mobile") ? "📱 Móvil" :
-                      acceso.navegador.includes("Chrome") ? "🌐 Chrome" :
-                      acceso.navegador.includes("Firefox") ? "🦊 Firefox" :
-                      acceso.navegador.includes("Safari") ? "🧭 Safari" : "💻 Ordenador"
+                      acceso.navegador.includes("Mobile") ? "Móvil" :
+                      acceso.navegador.includes("Chrome") ? "Chrome" :
+                      acceso.navegador.includes("Firefox") ? "Firefox" :
+                      acceso.navegador.includes("Safari") ? "Safari" : "Ordenador"
                     ) : "Desconocido"}
                   </td>
                 </tr>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { EDICION_ACTIVA } from "../ediciones.js";
+import { IconoTrofeo } from "./Iconos";
 import "../styles/Ranking.css";
 
 // Función para renderizar estrellas según la media
@@ -59,15 +60,25 @@ const Ranking = ({ edicion = EDICION_ACTIVA }) => {
     return () => unsubscribeTapas();
   }, [edicion]);
 
-  // Medallas para el podio
-  const medallas = ["🥇", "🥈", "🥉"];
+  // Posiciones para el podio
+  const medallas = ["1", "2", "3"];
   const clasesPodio = ["primero", "segundo", "tercero"];
 
   if (loading) {
     return (
-      <div className="ranking-container">
-        <div className="ranking-header">
-          <h2>Cargando ranking...</h2>
+      <div className="ranking-container" role="status" aria-label="Cargando ranking">
+        <div className="sk-cabecera">
+          <div className="sk sk-titulo"></div>
+          <div className="sk sk-sub"></div>
+        </div>
+        <div className="ranking-podio">
+          <div className="sk podio-item segundo" style={{ minHeight: 170 }}></div>
+          <div className="sk podio-item primero" style={{ minHeight: 210 }}></div>
+          <div className="sk podio-item tercero" style={{ minHeight: 150 }}></div>
+        </div>
+        <div className="sk-filas">
+          <div className="sk sk-fila"></div>
+          <div className="sk sk-fila"></div>
         </div>
       </div>
     );
@@ -77,7 +88,7 @@ const Ranking = ({ edicion = EDICION_ACTIVA }) => {
     return (
       <div className="ranking-container">
         <div className="ranking-vacio">
-          <div className="ranking-vacio-icono">🏆</div>
+          <div className="ranking-vacio-icono"><IconoTrofeo size={30} /></div>
           <h3>Aún no hay tapas en el ranking</h3>
           <p>¡Sé el primero en votar!</p>
         </div>
@@ -93,7 +104,7 @@ const Ranking = ({ edicion = EDICION_ACTIVA }) => {
   return (
     <div className="ranking-container">
       <div className="ranking-header">
-        <h2>🏆 Ranking de Tapas</h2>
+        <h2>Ranking de tapas</h2>
         <p>Las mejores tapas según nuestros usuarios</p>
       </div>
 

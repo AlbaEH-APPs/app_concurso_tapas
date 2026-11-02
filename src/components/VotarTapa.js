@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { EDICION_ACTIVA } from "../ediciones.js";
+import { Aviso, IconoCheck } from "./Iconos";
 import "../styles/VotarTapa.css";
 
 const VotarTapa = ({ tapaId }) => {
@@ -9,6 +10,7 @@ const VotarTapa = ({ tapaId }) => {
   const [hoverPuntuacion, setHoverPuntuacion] = useState(0);
   const [yaVotado, setYaVotado] = useState(false);
   const [votando, setVotando] = useState(false);
+  const [aviso, setAviso] = useState(null); // { tipo, texto } mostrado en pantalla
 
   const [userName, setUserName] = useState(null);   // Persona seleccionada
   const [deviceId, setDeviceId] = useState(null);   // ID único del dispositivo
@@ -75,21 +77,22 @@ const VotarTapa = ({ tapaId }) => {
   ===================================================== */
   const handleVotar = async () => {
     if (!userName) {
-      alert("Por favor, selecciona quién eres antes de votar");
+      setAviso({ tipo: "error", texto: "Por favor, selecciona quién eres antes de votar" });
       return;
     }
 
     if (puntuacion === 0) {
-      alert("Por favor, selecciona una puntuación del 1 al 5");
+      setAviso({ tipo: "error", texto: "Por favor, selecciona una puntuación del 1 al 5" });
       return;
     }
 
     if (yaVotado) {
-      alert("Ya has votado esta tapa");
+      setAviso({ tipo: "error", texto: "Ya has votado esta tapa" });
       return;
     }
 
     setVotando(true);
+    setAviso(null);
 
     try {
       await addDoc(collection(db, "votos"), {
@@ -102,10 +105,10 @@ const VotarTapa = ({ tapaId }) => {
       });
 
       setYaVotado(true);
-      alert(`¡Gracias por tu voto, ${userName}!`);
+      setAviso({ tipo: "exito", texto: `Gracias por tu voto, ${userName}` });
     } catch (error) {
       console.error("Error al votar:", error);
-      alert("Hubo un error al registrar tu voto");
+      setAviso({ tipo: "error", texto: "Hubo un error al registrar tu voto. Inténtalo de nuevo." });
     } finally {
       setVotando(false);
     }
@@ -125,7 +128,17 @@ const VotarTapa = ({ tapaId }) => {
           className={`voto-estrella ${
             i <= puntuacionMostrar ? "filled" : "empty"
           } ${yaVotado ? "disabled" : ""}`}
+          role="button"
+          tabIndex={yaVotado ? -1 : 0}
+          aria-label={`${i} ${i === 1 ? "estrella" : "estrellas"}`}
+          aria-pressed={i <= puntuacion}
           onClick={() => !yaVotado && setPuntuacion(i)}
+          onKeyDown={(e) => {
+            if (!yaVotado && (e.key === "Enter" || e.key === " ")) {
+              e.preventDefault();
+              setPuntuacion(i);
+            }
+          }}
           onMouseEnter={() => !yaVotado && setHoverPuntuacion(i)}
           onMouseLeave={() => !yaVotado && setHoverPuntuacion(0)}
         >
@@ -142,14 +155,17 @@ const VotarTapa = ({ tapaId }) => {
   ===================================================== */
   if (yaVotado) {
     return (
+      <div className="voto-confirmado-wrap">
+      {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
       <div className="voto-confirmado">
-        <div className="voto-confirmado-icono">✓</div>
+        <div className="voto-confirmado-icono"><IconoCheck size={18} /></div>
         <div className="voto-confirmado-contenido">
           <span className="voto-confirmado-titulo">¡Ya has votado!</span>
           <span className="voto-confirmado-texto">
             {userName} · {puntuacion} estrellas
           </span>
         </div>
+      </div>
       </div>
     );
   }
@@ -166,7 +182,9 @@ const VotarTapa = ({ tapaId }) => {
         </span>
       </div>
 
-      <div className="votar-estrellas">{renderEstrellas()}</div>
+      <div className="votar-estrellas" role="group" aria-label="Puntuación">{renderEstrellas()}</div>
+
+      {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
 
       <button
         onClick={handleVotar}
